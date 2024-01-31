@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add Food</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+</head>
+<body>
+
+<div th:insert="~{blocks/header :: header}"></div>
+
+<div class="container mt-5 mb-5">
+    <h1 style="text-align: center">Edit your product</h1>
+    <div th:each="product : ${product}" >
+        <form th:action="'/product/' + ${product.getId} + '/update'" method="post">
+            <input type="text" name="name" placeholder="Product's name" class="form-control" th:value="${product.getName()}"><br>
+            <input type="number" name="kkal" placeholder="Product's calories" class="form-control" th:value="${product.getKkal()}"><br>
+            <input type="number" name="protein" placeholder="Product's protein" class="form-control" th:value="${product.getProtein()}"><br>
+            <input type="number" name="carbohydrate" placeholder="Product's carbohydrate" class="form-control" th:value="${product.getCarbohydrate()}"><br>
+            <input type="number" name="fat" placeholder="Product's fat" class="form-control" th:value="${product.getFat()}"><br>
+            <p style="margin-bottom: 5px">Counted by:</p>
+            <input type="radio" name="count_by" placeholder="Is count by pieces" value="piece"><span>Pieces</span>
+
+            <input type="radio" name="count_by" placeholder="Is count by weight" value="weight"><span>Weight</span>
+
+            <br>
+            <br>
+            <button type="submit" class="btn btn-success">Update</button>
+        </form>
+    </div>
+</div>
+
+<div th:insert="~{blocks/footer :: footer}"></div>
+
+</body>
+</html>

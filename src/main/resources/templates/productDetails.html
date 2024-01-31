@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add Food</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+</head>
+<body>
+
+<div th:insert="~{blocks/header :: header}"></div>
+
+<div class="container mt-5 mb-5">
+    <h1 style="text-align: center">Products</h1>
+    <div th:each="product:${product}" class="alert alert-info mt-2">
+        <h3 th:text="${product.getName()}"/>
+        <p th:text="'Calories: ' + ${product.getKkal()}"/>
+        <p th:text="'Proteins: ' + ${product.getProtein()}"/>
+        <p th:text="'Carbohydrate: ' + ${product.getCarbohydrate()}"/>
+        <p th:text="'Fat: ' + ${product.getFat()}"/>
+
+        <a th:href="'/product/' + ${product.getId()} + '/update'" class="btn btn-warning">Edit</a>
+
+        <form th:action="'/product/' + ${product.getId} + '/delete'" method="post">
+            <button type="submit" class="btn btn-warning">Delete</button>
+        </form>
+
+    </div>
+</div>
+
+<div th:insert="~{blocks/footer :: footer}"></div>
+
+</body>
+</html>
