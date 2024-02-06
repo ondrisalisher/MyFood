@@ -28,8 +28,6 @@ public class ProductModel {
     private int carbohydrate;
     @NonNull
     private int fat;
-    @NonNull
-    private boolean is_piece;
     //todo
     private String created_by;
     @NonNull

@@ -1,6 +1,7 @@
 package org.example.myfood.services.impl;
 
 import lombok.AllArgsConstructor;
+import org.example.myfood.DTO.ProductDto;
 import org.example.myfood.models.ProductModel;
 import org.example.myfood.repositories.ProductRepository;
 import org.example.myfood.services.ProductService;
@@ -33,7 +34,7 @@ public class ProductServiceImpl implements ProductService {
 
 
 
-        ProductModel product = new ProductModel(name,kkal,protein,carbohydrate,fat,is_piece,creation_date);
+        ProductModel product = new ProductModel(name,kkal,protein,carbohydrate,fat,creation_date);
         productRepository.save(product);
 
         return "redirect:/product";
@@ -46,27 +47,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public String updateProduct(Long productId, String name, int kkal, int protein, int carbohydrate, int fat, String count_by) {
+    public String updateProduct(Long productId, ProductDto productDto) {
         Date update_date = new Date();
-
-        boolean is_piece;
-        if (count_by.equals("piece")){
-            is_piece = true;
-        } else if (count_by.equals("weight")) {
-            is_piece = false;
-        }else {
-            is_piece= Boolean.parseBoolean(null);
-        }
-
 
 
         ProductModel product = productRepository.findById(productId).orElseThrow();
-        product.setName(name);
-        product.setKkal(kkal);
-        product.setProtein(protein);
-        product.setCarbohydrate(carbohydrate);
-        product.setFat(fat);
-        product.set_piece(is_piece);
+        product.setName(productDto.name());
+        product.setKkal(productDto.kkal());
+        product.setProtein(productDto.protein());
+        product.setCarbohydrate(productDto.carbohydrate());
+        product.setFat(productDto.fat());
         product.setUpdate_date(update_date);
 
         productRepository.save(product);

@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
-public class MyUserDetails implements UserDetails {
+public class UserDetailsImpl implements UserDetails {
 
     private UserModel user;
 

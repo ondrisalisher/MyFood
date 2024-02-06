@@ -1,6 +1,7 @@
 package org.example.myfood.controllers;
 
 import lombok.AllArgsConstructor;
+import org.example.myfood.DTO.ProductDto;
 import org.example.myfood.services.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,9 +32,9 @@ public class ProductController {
     }
 
     @PostMapping("/{id}/update")
-    public String updateProduct(@PathVariable(value = "id") Long productId, @RequestParam String name, @RequestParam int kkal, @RequestParam int protein, @RequestParam int carbohydrate, @RequestParam int fat, @RequestParam String count_by, Model model){
+    public String updateProduct(@PathVariable(value = "id") Long productId, @ModelAttribute ProductDto productDto, Model model){
 
-        return productService.updateProduct(productId,name,kkal,protein,carbohydrate,fat,count_by);
+        return productService.updateProduct(productId, productDto);
     }
 
 
