@@ -1,6 +1,7 @@
 package org.example.myfood.controllers;
 
 import lombok.AllArgsConstructor;
+import org.example.myfood.DTO.EatenDTO;
 import org.example.myfood.DTO.ProductDto;
 import org.example.myfood.services.ProductService;
 import org.springframework.stereotype.Controller;
@@ -59,5 +60,10 @@ public class ProductController {
     @PostMapping("/{id}/like")
     public String likeProduct(@PathVariable(value = "id") Long productId){
         return productService.likeProduct(productId);
+    }
+
+    @PostMapping("/{id}/eat")
+    public String eatProduct(@PathVariable(value = "id") Long productId, @ModelAttribute EatenDTO eatenDTO){
+        return productService.eatProduct(productId, eatenDTO);
     }
 }

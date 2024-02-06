@@ -1,10 +1,13 @@
 package org.example.myfood.services.impl;
 
 import lombok.AllArgsConstructor;
+import org.example.myfood.DTO.EatenDTO;
 import org.example.myfood.DTO.ProductDto;
+import org.example.myfood.models.EatenModel;
 import org.example.myfood.models.FavoriteModel;
 import org.example.myfood.models.ProductModel;
 import org.example.myfood.models.UserModel;
+import org.example.myfood.repositories.EatenRepository;
 import org.example.myfood.repositories.FavoriteRepository;
 import org.example.myfood.repositories.ProductRepository;
 import org.example.myfood.repositories.UserRepository;
@@ -26,6 +29,7 @@ public class ProductServiceImpl implements ProductService {
     private ProductRepository productRepository;
     private FavoriteRepository favoriteRepository;
     private UserRepository userRepository;
+    private EatenRepository eatenRepository;
 
 
     @Override
@@ -33,7 +37,7 @@ public class ProductServiceImpl implements ProductService {
         Date creation_date = new Date();
 
 
-        ProductModel product = new ProductModel(productDto.name(),productDto.kkal(),productDto.protein(),productDto.carbohydrate(),productDto.fat(),creation_date);
+        ProductModel product = new ProductModel(productDto.name(), productDto.kkal(), productDto.protein(), productDto.carbohydrate(), productDto.fat(), creation_date);
         productRepository.save(product);
 
         return "redirect:/product";
@@ -65,7 +69,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public String updateProductPage(Long productId, Model model) {
-        if(!productRepository.existsById(productId)){
+        if (!productRepository.existsById(productId)) {
             return "redirect:/product";
         }
 
@@ -78,7 +82,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public String productDetails(Long productId, Model model) {
-        if(!productRepository.existsById(productId)){
+        if (!productRepository.existsById(productId)) {
             return "redirect:/product";
         }
 
@@ -115,4 +119,30 @@ public class ProductServiceImpl implements ProductService {
 
         return "redirect:/product/{id}";
     }
+
+    @Override
+    public String eatProduct(Long productId, EatenDTO eatenDTO) {
+        Date eaten_date = new Date();
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserModel user = new UserModel();
+        if (authentication != null && authentication.isAuthenticated()) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            user = userRepository.findByUsername(userDetails.getUsername()).get();
+        }
+
+        ProductModel product = productRepository.findById(productId).get();
+
+        EatenModel eaten = new EatenModel();
+        eaten.setProductId(product);
+        eaten.setUserId(user);
+        eaten.setQuantity(eatenDTO.quantity());
+        eaten.setDateTime(eaten_date);
+
+        eatenRepository.save(eaten);
+
+        return "redirect:/product";
+    }
+
+
 }
