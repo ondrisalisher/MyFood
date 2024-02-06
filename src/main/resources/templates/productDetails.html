@@ -20,8 +20,17 @@
 
         <a th:href="'/product/' + ${product.getId()} + '/update'" class="btn btn-warning">Edit</a>
 
+        <br>
+        <br>
+
         <form th:action="'/product/' + ${product.getId} + '/delete'" method="post">
             <button type="submit" class="btn btn-warning">Delete</button>
+        </form>
+
+        <br>
+
+        <form th:action="'/product/' + ${product.getId} + '/like'" method="post">
+            <button type="submit" class="btn btn-warning">Like</button>
         </form>
 
     </div>

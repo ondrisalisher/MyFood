@@ -17,4 +17,5 @@ public interface ProductService {
 
     public String products(Model model);
 
+    public String likeProduct(Long productId);
 }

@@ -55,4 +55,9 @@ public class ProductController {
     public String deleteProduct(@PathVariable(value = "id") Long productId){
         return productService.deleteProduct(productId);
     }
+
+    @PostMapping("/{id}/like")
+    public String likeProduct(@PathVariable(value = "id") Long productId){
+        return productService.likeProduct(productId);
+    }
 }

@@ -2,9 +2,16 @@ package org.example.myfood.services.impl;
 
 import lombok.AllArgsConstructor;
 import org.example.myfood.DTO.ProductDto;
+import org.example.myfood.models.FavoriteModel;
 import org.example.myfood.models.ProductModel;
+import org.example.myfood.models.UserModel;
+import org.example.myfood.repositories.FavoriteRepository;
 import org.example.myfood.repositories.ProductRepository;
+import org.example.myfood.repositories.UserRepository;
 import org.example.myfood.services.ProductService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -17,6 +24,8 @@ import java.util.Optional;
 public class ProductServiceImpl implements ProductService {
 
     private ProductRepository productRepository;
+    private FavoriteRepository favoriteRepository;
+    private UserRepository userRepository;
 
 
     @Override
@@ -85,5 +94,25 @@ public class ProductServiceImpl implements ProductService {
         Iterable<ProductModel> products = productRepository.findAll();
         model.addAttribute("products", products);
         return "products";
+    }
+
+    @Override
+    public String likeProduct(Long productId) {
+        Long userId = null;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserModel user = new UserModel();
+        if (authentication != null && authentication.isAuthenticated()) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            user = userRepository.findByUsername(userDetails.getUsername()).get();
+        }
+        ProductModel product = productRepository.findById(productId).get();
+
+        FavoriteModel favorite = new FavoriteModel();
+        favorite.setProductId(product);
+        favorite.setUserId(user);
+
+        favoriteRepository.save(favorite);
+
+        return "redirect:/product/{id}";
     }
 }

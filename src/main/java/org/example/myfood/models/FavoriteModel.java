@@ -1,19 +1,26 @@
 package org.example.myfood.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
+@RequiredArgsConstructor
 public class FavoriteModel {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private Long user_id;
-    private Long product_id;
+
+    @NonNull
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserModel userId;
+
+    @NonNull
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private ProductModel productId;
+
 }
