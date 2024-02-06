@@ -54,17 +54,17 @@
 //
 //
 //
-////    @Bean
-////    public UserDetailsService userDetailsService() {
-////        UserDetails user;
-////        user = User.withDefaultPasswordEncoder()
-////                .username("user")
-////                .password("password")
-////                .roles("USER")
-////                .build();
-////
-////        return new InMemoryUserDetailsManager(user);
-////    }
+//    @Bean
+//    public UserDetailsService userDetailsService() {
+//        UserDetails user;
+//        user = User.withDefaultPasswordEncoder()
+//                .username("user")
+//                .password("user")
+//                .roles("USER")
+//                .build();
+//
+//        return new InMemoryUserDetailsManager(user);
+//    }
 //
 //
 //

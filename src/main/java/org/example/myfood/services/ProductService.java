@@ -5,7 +5,7 @@ import org.springframework.ui.Model;
 
 
 public interface ProductService {
-    public String saveProduct(String name, int kkal, int protein, int carbohydrate, int fat, String count_by);
+    public String addProduct(ProductDto productDto);
 
     public String deleteProduct(Long productId);
 

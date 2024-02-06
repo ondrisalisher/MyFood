@@ -45,8 +45,8 @@ public class ProductController {
 
 
     @PostMapping("/add")
-    public String addProduct(@RequestParam String name, @RequestParam int kkal, @RequestParam int protein, @RequestParam int carbohydrate, @RequestParam int fat, @RequestParam String count_by, Model model){
-        return productService.saveProduct(name,kkal,protein,carbohydrate,fat,count_by);
+    public String addProduct(@ModelAttribute ProductDto productDto, Model model){
+        return productService.addProduct(productDto);
     }
 
 

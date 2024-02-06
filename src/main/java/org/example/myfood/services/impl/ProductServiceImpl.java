@@ -20,21 +20,11 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
-    public String saveProduct(String name, int kkal, int protein, int carbohydrate, int fat, String count_by) {
+    public String addProduct(ProductDto productDto) {
         Date creation_date = new Date();
 
-        boolean is_piece;
-        if (count_by.equals("piece")){
-            is_piece = true;
-        } else if (count_by.equals("weight")) {
-            is_piece = false;
-        }else {
-            is_piece= Boolean.parseBoolean(null);
-        }
 
-
-
-        ProductModel product = new ProductModel(name,kkal,protein,carbohydrate,fat,creation_date);
+        ProductModel product = new ProductModel(productDto.name(),productDto.kkal(),productDto.protein(),productDto.carbohydrate(),productDto.fat(),creation_date);
         productRepository.save(product);
 
         return "redirect:/product";

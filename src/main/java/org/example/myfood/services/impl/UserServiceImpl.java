@@ -1,6 +1,7 @@
 package org.example.myfood.services.impl;
 
 import lombok.AllArgsConstructor;
+import org.example.myfood.DTO.UserDTO;
 import org.example.myfood.models.UserModel;
 import org.example.myfood.repositories.UserRepository;
 import org.example.myfood.services.UserService;
@@ -15,13 +16,13 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public String addUser(String first_name, String last_name, String username, String password, int desired_kkal, int desired_protein, int desired_carbohydrate, int desired_fat) {
+    public String addUser(UserDTO userDTO) {
 
-        String password_encoded = passwordEncoder.encode(password);
+        String password_encoded = passwordEncoder.encode(userDTO.password());
         String role = "ROLE_USER";
-        UserModel user = new UserModel(first_name, last_name, username, password_encoded, role, desired_kkal, desired_protein, desired_carbohydrate, desired_fat);
+        UserModel user = new UserModel(userDTO.first_name(), userDTO.last_name(), userDTO.username(), password_encoded, role, userDTO.desired_kkal(), userDTO.desired_protein(), userDTO.desired_carbohydrate(), userDTO.desired_fat());
         userRepository.save(user);
 
-        return "redirect:/user/login";
+        return "redirect:/login";
     }
 }
