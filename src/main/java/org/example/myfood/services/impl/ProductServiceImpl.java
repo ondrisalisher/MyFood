@@ -139,6 +139,7 @@ public class ProductServiceImpl implements ProductService {
         eaten.setQuantity(eatenDTO.quantity());
         eaten.setDateTime(eaten_date);
 
+
         eatenRepository.save(eaten);
 
         return "redirect:/product";
