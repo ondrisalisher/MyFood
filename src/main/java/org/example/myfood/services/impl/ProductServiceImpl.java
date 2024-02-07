@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Optional;
@@ -138,7 +139,7 @@ public class ProductServiceImpl implements ProductService {
         eaten.setUserId(user);
         eaten.setQuantity(eatenDTO.quantity());
         eaten.setDateTime(eaten_date);
-
+        eaten.setDate(eaten_date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
 
         eatenRepository.save(eaten);
 

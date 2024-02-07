@@ -4,9 +4,11 @@ import org.example.myfood.models.EatenModel;
 import org.example.myfood.models.UserModel;
 import org.springframework.data.repository.CrudRepository;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.Optional;
 
 
 public interface EatenRepository extends CrudRepository<EatenModel,Long>{
-    Iterable<EatenModel> findByUserId(UserModel userId);
+    Iterable<EatenModel> findByUserIdAndDate(UserModel user, LocalDate date);
 }

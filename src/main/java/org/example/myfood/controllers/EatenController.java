@@ -5,6 +5,7 @@ import org.example.myfood.services.EatenService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -14,8 +15,8 @@ public class EatenController {
 
     private EatenService eatenService;
 
-    @GetMapping("/")
-    public String eaten(Model model){
-        return eatenService.eaten(model);
+    @GetMapping("/{day}-{month}-{year}")
+    public String eaten(@PathVariable(value = "day") int day, @PathVariable(value = "month") int month, @PathVariable(value = "year") int year, Model model){
+        return eatenService.eaten(day, month, year ,model);
     }
 }
