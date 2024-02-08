@@ -10,6 +10,13 @@
 <div th:insert="~{blocks/header :: header}"></div>
 
 <div class="container mt-5 mb-5">
+    <h1 style="text-align: center" th:text="${date}"></h1>
+    <div>
+        <p th:text="'Calories: ' + ${totalCalories}"/>
+        <p th:text="'Proteins: ' + ${totalProtein}"/>
+        <p th:text="'Carbohydrate: ' + ${totalCarbohydrate}"/>
+        <p th:text="'Fats: ' + ${totalFats}"/>
+    </div>
     <h1 style="text-align: center">Products</h1>
     <div th:each="eaten:${eaten}" class="alert alert-info mt-2">
         <h3 th:text="${eaten.getProductId().getName()}"/>

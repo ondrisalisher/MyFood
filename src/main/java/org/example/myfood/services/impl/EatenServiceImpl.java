@@ -13,11 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.StreamSupport;
 
 @Service
 @AllArgsConstructor
@@ -38,9 +33,26 @@ public class EatenServiceImpl implements EatenService {
             user = userRepository.findByUsername(userDetails.getUsername()).get();
         }
 
-            Iterable<EatenModel> eaten = eatenRepository.findByUserIdAndDate(user, date);
+        Iterable<EatenModel> eaten = eatenRepository.findByUserIdAndDate(user, date);
+
+
+        int totalCalories=0;
+        int totalProtein=0;
+        int totalCarbohydrate=0;
+        int totalFats=0;
+        for(EatenModel eatenOne:eaten){
+            totalCalories = totalCalories + eatenOne.getProductId().getKkal() * (eatenOne.getQuantity())/100;
+            totalProtein = totalProtein + eatenOne.getProductId().getProtein() * (eatenOne.getQuantity())/100;
+            totalCarbohydrate = totalCarbohydrate + eatenOne.getProductId().getCarbohydrate() * (eatenOne.getQuantity())/100;
+            totalFats = totalFats + eatenOne.getProductId().getFat() * (eatenOne.getQuantity())/100;
+        }
 
         model.addAttribute("eaten", eaten);
+        model.addAttribute("totalCalories", totalCalories);
+        model.addAttribute("totalProtein", totalProtein);
+        model.addAttribute("totalCarbohydrate", totalCarbohydrate);
+        model.addAttribute("totalFats", totalFats);
+        model.addAttribute("date", date);
         return "eaten";
     }
 }
