@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface ProductService {
     public String addProduct(ProductDto productDto);
 
+    public  String addProduct(Model model);
+
     public String deleteProduct(Long productId);
 
     public String updateProduct(Long productId, ProductDto productDto);
@@ -22,4 +24,6 @@ public interface ProductService {
     public String likeProduct(Long productId);
 
     public String eatProduct(Long productId, EatenDTO eatenDTO);
+
+    public String favorite(Model model);
 }

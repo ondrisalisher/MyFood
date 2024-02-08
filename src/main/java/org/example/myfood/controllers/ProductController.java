@@ -41,7 +41,7 @@ public class ProductController {
 
     @GetMapping("/add")
     public String addProductPage(Model model){
-        return "addProduct";
+        return productService.addProduct(model);
     }
 
 
@@ -65,5 +65,10 @@ public class ProductController {
     @PostMapping("/{id}/eat")
     public String eatProduct(@PathVariable(value = "id") Long productId, @ModelAttribute EatenDTO eatenDTO){
         return productService.eatProduct(productId, eatenDTO);
+    }
+
+    @GetMapping("/favorite")
+    public String favorite(Model model){
+        return productService.favorite(model);
     }
 }

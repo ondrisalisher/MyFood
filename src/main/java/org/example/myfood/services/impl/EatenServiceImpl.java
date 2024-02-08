@@ -22,7 +22,10 @@ public class EatenServiceImpl implements EatenService {
 
     @Override
     public String eaten(int day, int month, int year, Model model) {
-
+        LocalDate localDate = LocalDate.now();
+        int localDateYear = localDate.getYear();
+        int localDateMonth = localDate.getMonthValue();
+        int localDateDay = localDate.getDayOfMonth();
 
         LocalDate date = LocalDate.of(year, month, day);
 
@@ -53,6 +56,11 @@ public class EatenServiceImpl implements EatenService {
         model.addAttribute("totalCarbohydrate", totalCarbohydrate);
         model.addAttribute("totalFats", totalFats);
         model.addAttribute("date", date);
+
+        model.addAttribute("year", localDateYear);
+        model.addAttribute("month", localDateMonth);
+        model.addAttribute("day", localDateDay);
+
         return "eaten";
     }
 }

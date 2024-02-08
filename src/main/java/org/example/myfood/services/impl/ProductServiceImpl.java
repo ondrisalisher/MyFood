@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
@@ -42,6 +43,20 @@ public class ProductServiceImpl implements ProductService {
         productRepository.save(product);
 
         return "redirect:/product";
+    }
+
+    @Override
+    public String addProduct(Model model) {
+        LocalDate localDate = LocalDate.now();
+        int localDateYear = localDate.getYear();
+        int localDateMonth = localDate.getMonthValue();
+        int localDateDay = localDate.getDayOfMonth();
+
+        model.addAttribute("year", localDateYear);
+        model.addAttribute("month", localDateMonth);
+        model.addAttribute("day", localDateDay);
+
+        return "addProduct";
     }
 
     @Override
@@ -70,6 +85,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public String updateProductPage(Long productId, Model model) {
+        LocalDate localDate = LocalDate.now();
+        int localDateYear = localDate.getYear();
+        int localDateMonth = localDate.getMonthValue();
+        int localDateDay = localDate.getDayOfMonth();
+
         if (!productRepository.existsById(productId)) {
             return "redirect:/product";
         }
@@ -78,11 +98,23 @@ public class ProductServiceImpl implements ProductService {
         ArrayList<ProductModel> res = new ArrayList<>();
         product.ifPresent(res::add);
         model.addAttribute("product", res);
+
+
+
+        model.addAttribute("year", localDateYear);
+        model.addAttribute("month", localDateMonth);
+        model.addAttribute("day", localDateDay);
+
         return "editProduct";
     }
 
     @Override
     public String productDetails(Long productId, Model model) {
+        LocalDate localDate = LocalDate.now();
+        int localDateYear = localDate.getYear();
+        int localDateMonth = localDate.getMonthValue();
+        int localDateDay = localDate.getDayOfMonth();
+
         if (!productRepository.existsById(productId)) {
             return "redirect:/product";
         }
@@ -91,13 +123,31 @@ public class ProductServiceImpl implements ProductService {
         ArrayList<ProductModel> res = new ArrayList<>();
         product.ifPresent(res::add);
         model.addAttribute("product", res);
+
+
+
+        model.addAttribute("year", localDateYear);
+        model.addAttribute("month", localDateMonth);
+        model.addAttribute("day", localDateDay);
+
         return "productDetails";
     }
 
     @Override
     public String products(Model model) {
+        LocalDate localDate = LocalDate.now();
+        int localDateYear = localDate.getYear();
+        int localDateMonth = localDate.getMonthValue();
+        int localDateDay = localDate.getDayOfMonth();
+
         Iterable<ProductModel> products = productRepository.findAll();
         model.addAttribute("products", products);
+
+
+        model.addAttribute("year", localDateYear);
+        model.addAttribute("month", localDateMonth);
+        model.addAttribute("day", localDateDay);
+
         return "products";
     }
 
@@ -144,6 +194,32 @@ public class ProductServiceImpl implements ProductService {
         eatenRepository.save(eaten);
 
         return "redirect:/product";
+    }
+
+    @Override
+    public String favorite(Model model) {
+        LocalDate localDate = LocalDate.now();
+        int localDateYear = localDate.getYear();
+        int localDateMonth = localDate.getMonthValue();
+        int localDateDay = localDate.getDayOfMonth();
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserModel user = new UserModel();
+        if (authentication != null && authentication.isAuthenticated()) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            user = userRepository.findByUsername(userDetails.getUsername()).get();
+        }
+
+        Iterable<FavoriteModel> favoriteProducts = favoriteRepository.findByUserId(user);
+        model.addAttribute("favoriteProducts", favoriteProducts);
+
+
+
+        model.addAttribute("year", localDateYear);
+        model.addAttribute("month", localDateMonth);
+        model.addAttribute("day", localDateDay);
+
+        return "favorite";
     }
 
 

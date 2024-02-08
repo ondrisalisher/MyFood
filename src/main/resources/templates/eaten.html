@@ -10,7 +10,7 @@
 <div th:insert="~{blocks/header :: header}"></div>
 
 <div class="container mt-5 mb-5">
-    <h1 style="text-align: center" th:text="${date}"></h1>
+    <h1 style="text-align: center" th:text="${date.getDayOfMonth()} + '-'+ ${date.getMonthValue()} + '-' + ${date.getYear()}"></h1>
     <div>
         <p th:text="'Calories: ' + ${totalCalories}"/>
         <p th:text="'Proteins: ' + ${totalProtein}"/>
