@@ -14,7 +14,7 @@
     <div th:each="product : ${product}" >
         <form th:action="'/product/' + ${product.getId} + '/update'" method="post">
             <input type="text" name="name" placeholder="Product's name" class="form-control" th:value="${product.getName()}"><br>
-            <input type="number" name="kkal" placeholder="Product's calories" class="form-control" th:value="${product.getKkal()}"><br>
+            <input type="number" name="calories" placeholder="Product's calories" class="form-control" th:value="${product.getCalories()}"><br>
             <input type="number" name="protein" placeholder="Product's protein" class="form-control" th:value="${product.getProtein()}"><br>
             <input type="number" name="carbohydrate" placeholder="Product's carbohydrate" class="form-control" th:value="${product.getCarbohydrate()}"><br>
             <input type="number" name="fat" placeholder="Product's fat" class="form-control" th:value="${product.getFat()}"><br>

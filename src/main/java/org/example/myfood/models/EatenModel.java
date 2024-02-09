@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -23,7 +22,7 @@ public class EatenModel {
     private UserModel userId;
 
     @ManyToOne
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product")
     private ProductModel productId;
 
     private int quantity;

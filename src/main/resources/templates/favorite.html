@@ -13,7 +13,7 @@
     <h1 style="text-align: center">Products</h1>
     <div th:each="product:${favoriteProducts}" class="alert alert-info mt-2">
         <h3 th:text="${product.getProductId().getName()}"/>
-        <p th:text="'Calories: ' + ${product.getProductId().getKkal()}"/>
+        <p th:text="'Calories: ' + ${product.getProductId().getCalories()}"/>
         <a th:href="'/product/' + ${product.getProductId().getId()}" class="btn btn-warning">Details</a>
     </div>
 </div>

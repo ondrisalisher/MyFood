@@ -7,7 +7,7 @@ public record UserDTO(
         String last_name,
         String username,
         String password,
-        int desired_kkal,
+        int desired_calories,
         int desired_protein,
         int desired_carbohydrate,
         int desired_fat

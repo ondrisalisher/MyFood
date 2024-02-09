@@ -20,7 +20,7 @@ public class FavoriteModel {
 
     @NonNull
     @ManyToOne
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product")
     private ProductModel productId;
 
 }

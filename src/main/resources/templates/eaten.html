@@ -21,7 +21,7 @@
     <div th:each="eaten:${eaten}" class="alert alert-info mt-2">
         <h3 th:text="${eaten.getProductId().getName()}"/>
         <p th:text="'Quantity: ' + ${eaten.getQuantity()}"/>
-<!--        <a th:href="'/product/' + ${product.getId()}" class="btn btn-warning">Details</a>-->
+        <a th:href="'/eaten/' + ${eaten.getId()} + '/details'" class="btn btn-warning">Details</a>
     </div>
 </div>
 

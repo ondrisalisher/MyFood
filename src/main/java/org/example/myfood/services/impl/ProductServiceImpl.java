@@ -38,8 +38,22 @@ public class ProductServiceImpl implements ProductService {
     public String addProduct(ProductDto productDto) {
         Date creation_date = new Date();
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserModel user = new UserModel();
+        if (authentication != null && authentication.isAuthenticated()) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            user = userRepository.findByUsername(userDetails.getUsername()).get();
+        }
 
-        ProductModel product = new ProductModel(productDto.name(), productDto.kkal(), productDto.protein(), productDto.carbohydrate(), productDto.fat(), creation_date);
+        ProductModel product = new ProductModel();
+        product.setName(productDto.name());
+        product.setCalories(productDto.calories());
+        product.setProtein(productDto.protein());
+        product.setCarbohydrate(productDto.carbohydrate());
+        product.setFat(productDto.fat());
+        product.setCreatedBy(user);
+        product.setCreationDate(creation_date);
+
         productRepository.save(product);
 
         return "redirect:/product";
@@ -72,11 +86,11 @@ public class ProductServiceImpl implements ProductService {
 
         ProductModel product = productRepository.findById(productId).orElseThrow();
         product.setName(productDto.name());
-        product.setKkal(productDto.kkal());
+        product.setCalories(productDto.calories());
         product.setProtein(productDto.protein());
         product.setCarbohydrate(productDto.carbohydrate());
         product.setFat(productDto.fat());
-        product.setUpdate_date(update_date);
+        product.setUpdateDate(update_date);
 
         productRepository.save(product);
 
@@ -162,13 +176,18 @@ public class ProductServiceImpl implements ProductService {
         }
         ProductModel product = productRepository.findById(productId).get();
 
-        FavoriteModel favorite = new FavoriteModel();
-        favorite.setProductId(product);
-        favorite.setUserId(user);
+        if (user != null && product != null) {
+            boolean exists = favoriteRepository.existsByUserIdAndProductId(user, product);
+            if (!exists) {
+                FavoriteModel favorite = new FavoriteModel();
+                favorite.setProductId(product);
+                favorite.setUserId(user);
 
-        favoriteRepository.save(favorite);
+                favoriteRepository.save(favorite);
+            }
+        }
 
-        return "redirect:/product/{id}";
+        return "redirect:/product/"+ productId;
     }
 
     @Override

@@ -13,7 +13,7 @@
     <h1 style="text-align: center">Products</h1>
     <div th:each="product:${product}" class="alert alert-info mt-2">
         <h3 th:text="${product.getName()}"/>
-        <p th:text="'Calories: ' + ${product.getKkal()}"/>
+        <p th:text="'Calories: ' + ${product.getCalories()}"/>
         <p th:text="'Proteins: ' + ${product.getProtein()}"/>
         <p th:text="'Carbohydrate: ' + ${product.getCarbohydrate()}"/>
         <p th:text="'Fat: ' + ${product.getFat()}"/>
@@ -23,13 +23,13 @@
         <br>
         <br>
 
-        <form th:action="'/product/' + ${product.getId} + '/delete'" method="post">
+        <form th:action="'/product/' + ${product.getId()} + '/delete'" method="post">
             <button type="submit" class="btn btn-warning">Delete</button>
         </form>
 
         <br>
 
-        <form th:action="'/product/' + ${product.getId} + '/like'" method="post">
+        <form th:action="'/product/' + ${product.getId()} + '/like'" method="post">
             <button type="submit" class="btn btn-warning">Like</button>
         </form>
 

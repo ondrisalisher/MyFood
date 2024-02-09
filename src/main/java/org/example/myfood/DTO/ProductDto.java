@@ -6,7 +6,7 @@ import lombok.Setter;
 
 public record ProductDto(
         String name,
-        int kkal,
+        int calories,
         int protein,
         int carbohydrate,
         int fat

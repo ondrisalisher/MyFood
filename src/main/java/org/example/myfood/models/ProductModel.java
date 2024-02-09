@@ -1,10 +1,7 @@
 package org.example.myfood.models;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Date;
@@ -21,18 +18,20 @@ public class ProductModel {
     @NonNull
     private String name;
     @NonNull
-    private int kkal;
+    private int calories;
     @NonNull
     private int protein;
     @NonNull
     private int carbohydrate;
     @NonNull
     private int fat;
-    //todo
-    private String created_by;
     @NonNull
-    private Date creation_date;
-    private Date update_date;
+    @ManyToOne
+    @JoinColumn(name = "created_by")
+    private UserModel createdBy;
+    @NonNull
+    private Date creationDate;
+    private Date updateDate;
     //todo
     private String status;
 }
