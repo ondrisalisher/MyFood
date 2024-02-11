@@ -36,7 +36,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public String addProduct(ProductDto productDto) {
-        Date creation_date = new Date();
+        LocalDate creation_date = LocalDate.now();
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserModel user = new UserModel();
@@ -46,6 +46,7 @@ public class ProductServiceImpl implements ProductService {
         }
 
         ProductModel product = new ProductModel();
+
         product.setName(productDto.name());
         product.setCalories(productDto.calories());
         product.setProtein(productDto.protein());
@@ -53,6 +54,8 @@ public class ProductServiceImpl implements ProductService {
         product.setFat(productDto.fat());
         product.setCreatedBy(user);
         product.setCreationDate(creation_date);
+        product.setConfirmedBy(userRepository.findById(productDto.confirmedBy_id()).get());
+        product.setStatus(productDto.status());
 
         productRepository.save(product);
 
@@ -61,16 +64,65 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public String addProduct(Model model) {
-        LocalDate localDate = LocalDate.now();
-        int localDateYear = localDate.getYear();
-        int localDateMonth = localDate.getMonthValue();
-        int localDateDay = localDate.getDayOfMonth();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserModel user = new UserModel();
+        if (authentication != null && authentication.isAuthenticated()) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            user = userRepository.findByUsername(userDetails.getUsername()).get();
+        }
 
-        model.addAttribute("year", localDateYear);
-        model.addAttribute("month", localDateMonth);
-        model.addAttribute("day", localDateDay);
-
+        if(user.getRole().equals("ROLE_ADMIN")){
+            model.addAttribute("status", "confirmed");
+            model.addAttribute("confirmedBy", user.getId());
+        }
+        else if(user.getRole().equals("ROLE_USER")){
+            model.addAttribute("status", "unconfirmed");
+        }else{
+            model.addAttribute("status", "none");
+        }
         return "addProduct";
+    }
+
+    @Override
+    public String productConfirmation(Long productId, Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserModel user = new UserModel();
+        if (authentication != null && authentication.isAuthenticated()) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            user = userRepository.findByUsername(userDetails.getUsername()).get();
+        }
+        if(user.getRole().equals("ROLE_USER")){
+            return "redirect:/product";
+        }
+
+        if (!productRepository.existsById(productId)) {
+            return "redirect:/product";
+        }
+
+        Optional<ProductModel> product = productRepository.findById(productId);
+        ArrayList<ProductModel> res = new ArrayList<>();
+        product.ifPresent(res::add);
+        model.addAttribute("product", res);
+
+        return "productConfirmation";
+    }
+
+    @Override
+    public String productConfirm(Long productId, Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserModel user = new UserModel();
+        if (authentication != null && authentication.isAuthenticated()) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            user = userRepository.findByUsername(userDetails.getUsername()).get();
+        }
+
+        ProductModel product = productRepository.findById(productId).orElseThrow();
+
+        product.setConfirmedBy(user);
+        product.setStatus("confirmed");
+        productRepository.save(product);
+
+        return "redirect:/product";
     }
 
     @Override
@@ -99,10 +151,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public String updateProductPage(Long productId, Model model) {
-        LocalDate localDate = LocalDate.now();
-        int localDateYear = localDate.getYear();
-        int localDateMonth = localDate.getMonthValue();
-        int localDateDay = localDate.getDayOfMonth();
 
         if (!productRepository.existsById(productId)) {
             return "redirect:/product";
@@ -112,22 +160,35 @@ public class ProductServiceImpl implements ProductService {
         ArrayList<ProductModel> res = new ArrayList<>();
         product.ifPresent(res::add);
         model.addAttribute("product", res);
-
-
-
-        model.addAttribute("year", localDateYear);
-        model.addAttribute("month", localDateMonth);
-        model.addAttribute("day", localDateDay);
 
         return "editProduct";
     }
 
     @Override
     public String productDetails(Long productId, Model model) {
-        LocalDate localDate = LocalDate.now();
-        int localDateYear = localDate.getYear();
-        int localDateMonth = localDate.getMonthValue();
-        int localDateDay = localDate.getDayOfMonth();
+        if (!productRepository.existsById(productId)) {
+            return "redirect:/product";
+        }
+
+        Optional<ProductModel> product = productRepository.findById(productId);
+        ArrayList<ProductModel> res = new ArrayList<>();
+        product.ifPresent(res::add);
+        model.addAttribute("product", res);
+
+        return "productDetails";
+    }
+
+    @Override
+    public String productDetailsAdmin(Long productId, Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserModel user = new UserModel();
+        if (authentication != null && authentication.isAuthenticated()) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            user = userRepository.findByUsername(userDetails.getUsername()).get();
+        }
+        if(user.getRole().equals("ROLE_USER")){
+            return "redirect:/product/"+productId;
+        }
 
         if (!productRepository.existsById(productId)) {
             return "redirect:/product";
@@ -138,29 +199,33 @@ public class ProductServiceImpl implements ProductService {
         product.ifPresent(res::add);
         model.addAttribute("product", res);
 
-
-
-        model.addAttribute("year", localDateYear);
-        model.addAttribute("month", localDateMonth);
-        model.addAttribute("day", localDateDay);
-
-        return "productDetails";
+        return "productDetailsAdmin";
     }
 
     @Override
     public String products(Model model) {
-        LocalDate localDate = LocalDate.now();
-        int localDateYear = localDate.getYear();
-        int localDateMonth = localDate.getMonthValue();
-        int localDateDay = localDate.getDayOfMonth();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserModel user = new UserModel();
+        if (authentication != null && authentication.isAuthenticated()) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            user = userRepository.findByUsername(userDetails.getUsername()).get();
+        }
+
+        if(user.getRole().equals("ROLE_ADMIN")){
+            Iterable<ProductModel> unconfirmed = productRepository.findByStatus("unconfirmed");
+            model.addAttribute("unconfirmed", unconfirmed);
+            Iterable<ProductModel> confirmed = productRepository.findByStatus("confirmed");
+            model.addAttribute("confirmed", confirmed);
+            model.addAttribute("forAdmin", "/admin");
+        }
+        else if(user.getRole().equals("ROLE_USER")){
+            Iterable<ProductModel> confirmed = productRepository.findByStatus("confirmed");
+            model.addAttribute("confirmed", confirmed);
+        }
+
 
         Iterable<ProductModel> products = productRepository.findAll();
         model.addAttribute("products", products);
-
-
-        model.addAttribute("year", localDateYear);
-        model.addAttribute("month", localDateMonth);
-        model.addAttribute("day", localDateDay);
 
         return "products";
     }
@@ -217,10 +282,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public String favorite(Model model) {
-        LocalDate localDate = LocalDate.now();
-        int localDateYear = localDate.getYear();
-        int localDateMonth = localDate.getMonthValue();
-        int localDateDay = localDate.getDayOfMonth();
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserModel user = new UserModel();
@@ -231,12 +292,6 @@ public class ProductServiceImpl implements ProductService {
 
         Iterable<FavoriteModel> favoriteProducts = favoriteRepository.findByUserId(user);
         model.addAttribute("favoriteProducts", favoriteProducts);
-
-
-
-        model.addAttribute("year", localDateYear);
-        model.addAttribute("month", localDateMonth);
-        model.addAttribute("day", localDateDay);
 
         return "favorite";
     }

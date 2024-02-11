@@ -30,10 +30,6 @@ public class EatenServiceImpl implements EatenService {
 
     @Override
     public String eaten(int day, int month, int year, Model model) {
-        LocalDate localDate = LocalDate.now();
-        int localDateYear = localDate.getYear();
-        int localDateMonth = localDate.getMonthValue();
-        int localDateDay = localDate.getDayOfMonth();
 
         LocalDate date = LocalDate.of(year, month, day);
 
@@ -57,17 +53,22 @@ public class EatenServiceImpl implements EatenService {
             totalCarbohydrate = totalCarbohydrate + eatenOne.getProductId().getCarbohydrate() * (eatenOne.getQuantity())/100;
             totalFats = totalFats + eatenOne.getProductId().getFat() * (eatenOne.getQuantity())/100;
         }
+        int totalCaloriesPercentage = totalCalories * 100 / user.getDesired_calories();
+        int totalProteinPercentage = totalProtein * 100 / user.getDesired_protein();
+        int totalCarbohydratePercentage = totalCarbohydrate * 100 / user.getDesired_carbohydrate();
+        int totalFatsPercentage = totalFats * 100 / user.getDesired_fat();
+
 
         model.addAttribute("eaten", eaten);
         model.addAttribute("totalCalories", totalCalories);
         model.addAttribute("totalProtein", totalProtein);
         model.addAttribute("totalCarbohydrate", totalCarbohydrate);
         model.addAttribute("totalFats", totalFats);
+        model.addAttribute("totalCaloriesPercentage", totalCaloriesPercentage);
+        model.addAttribute("totalProteinPercentage", totalProteinPercentage);
+        model.addAttribute("totalCarbohydratePercentage", totalCarbohydratePercentage);
+        model.addAttribute("totalFatsPercentage", totalFatsPercentage);
         model.addAttribute("date", date);
-
-        model.addAttribute("year", localDateYear);
-        model.addAttribute("month", localDateMonth);
-        model.addAttribute("day", localDateDay);
 
         return "eaten";
     }
@@ -89,12 +90,6 @@ public class EatenServiceImpl implements EatenService {
         ArrayList<EatenModel> res = new ArrayList<>();
         product.ifPresent(res::add);
         model.addAttribute("product", res);
-
-
-        model.addAttribute("year", localDateYear);
-        model.addAttribute("month", localDateMonth);
-        model.addAttribute("day", localDateDay);
-
 
         return "eatenDetails";
     }

@@ -1,14 +1,13 @@
 package org.example.myfood.DTO;
 
-import lombok.Getter;
-import lombok.Setter;
-
 
 public record ProductDto(
         String name,
         int calories,
         int protein,
         int carbohydrate,
-        int fat
+        int fat,
+        Long confirmedBy_id,
+        String status
 ) {
 }

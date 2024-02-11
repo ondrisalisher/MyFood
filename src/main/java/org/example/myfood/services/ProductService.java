@@ -11,6 +11,10 @@ public interface ProductService {
 
     public  String addProduct(Model model);
 
+    public  String productConfirmation(Long productId, Model model);
+
+    public  String productConfirm(Long productId, Model model);
+
     public String deleteProduct(Long productId);
 
     public String updateProduct(Long productId, ProductDto productDto);
@@ -18,6 +22,8 @@ public interface ProductService {
     public String updateProductPage(Long productId, Model model);
 
     public String productDetails(Long productId, Model model);
+
+    public String productDetailsAdmin(Long productId, Model model);
 
     public String products(Model model);
 

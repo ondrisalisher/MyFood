@@ -17,6 +17,8 @@
         <input type="number" name="protein" placeholder="Product's protein" class="form-control"><br>
         <input type="number" name="carbohydrate" placeholder="Product's carbohydrate" class="form-control"><br>
         <input type="number" name="fat" placeholder="Product's fat" class="form-control"><br>
+        <input type="text" name="status" hidden="hidden" th:value="${status}">
+        <input type="number" name="confirmedBy_id" hidden="hidden" th:value="${confirmedBy}">
         <br>
         <br>
         <button type="submit" class="btn btn-success">Confirm</button>

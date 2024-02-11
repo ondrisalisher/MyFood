@@ -4,4 +4,5 @@ import org.example.myfood.models.ProductModel;
 import org.springframework.data.repository.CrudRepository;
 
 public interface ProductRepository extends CrudRepository<ProductModel,Long> {
+    public Iterable<ProductModel> findByStatus(String status);
 }

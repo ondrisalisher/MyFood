@@ -4,6 +4,7 @@ package org.example.myfood.models;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -25,13 +26,21 @@ public class ProductModel {
     private int carbohydrate;
     @NonNull
     private int fat;
+
     @NonNull
     @ManyToOne
     @JoinColumn(name = "created_by")
     private UserModel createdBy;
+
+    @ManyToOne
+    @JoinColumn(name = "confirmed_by")
+    private UserModel confirmedBy;
+
     @NonNull
-    private Date creationDate;
+    private LocalDate creationDate;
+    private Date confirmationDate;
     private Date updateDate;
-    //todo
+
+    @NonNull
     private String status;
 }

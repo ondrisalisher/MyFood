@@ -20,6 +20,11 @@
         <p th:text="'Proteins: ' + ${product.getProtein()}"/>
         <p th:text="'Carbohydrate: ' + ${product.getCarbohydrate()}"/>
         <p th:text="'Fat: ' + ${product.getFat()}"/>
+        <p th:text="'Creatied by: ' + ${product.getCreatedBy().getId} + ', ' + ${product.getCreatedBy().getUsername}"></p>
+        <p th:text="'Confirmed by: ' + ${product.getConfirmedBy().getId} + ', ' + ${product.getConfirmedBy().getUsername}"></p>
+        <p th:text="'Creation date: ' + ${product.getCreationDate()}"></p>
+        <p th:text="'Confirmation date: ' + ${product.getConfirmationDate()}"></p>
+        <p th:text="'Update date: ' + ${product.getUpdateDate()}"></p>
 
         <a th:href="'/product/' + ${product.getId()} + '/update'" class="btn btn-warning">Edit</a>
 

@@ -10,11 +10,17 @@
 <div th:insert="~{blocks/header :: header}"></div>
 
 <div class="container mt-5 mb-5">
+    <div th:each="unconfirmed:${unconfirmed}" class="alert alert-info mt-2">
+        <h2>(Unconfirmed!)</h2>
+        <h3 th:text="${unconfirmed.getName()}"/>
+        <p th:text="'Calories: ' + ${unconfirmed.getCalories()}"/>
+        <a th:href="'/product/' + ${unconfirmed.getId()} + '/confirmation'" class="btn btn-warning">Details</a>
+    </div>
     <h1 style="text-align: center">Products</h1>
-    <div th:each="product:${products}" class="alert alert-info mt-2">
-        <h3 th:text="${product.getName()}"/>
-        <p th:text="'Calories: ' + ${product.getCalories()}"/>
-        <a th:href="'/product/' + ${product.getId()}" class="btn btn-warning">Details</a>
+    <div th:each="confirmed:${confirmed}" class="alert alert-info mt-2">
+        <h3 th:text="${confirmed.getName()}"/>
+        <p th:text="'Calories: ' + ${confirmed.getCalories()}"/>
+        <a th:href="'/product/' + ${confirmed.getId()} + ${forAdmin}" class="btn btn-warning">Details</a>
     </div>
 </div>
 

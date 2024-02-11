@@ -24,7 +24,7 @@ public class UserModel {
     @NonNull
     private String role;
     @NonNull
-    private int desired_kkal;
+    private int desired_calories;
     @NonNull
     private int desired_protein;
     @NonNull

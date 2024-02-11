@@ -23,6 +23,6 @@ public class UserServiceImpl implements UserService {
         UserModel user = new UserModel(userDTO.first_name(), userDTO.last_name(), userDTO.username(), password_encoded, role, userDTO.desired_calories(), userDTO.desired_protein(), userDTO.desired_carbohydrate(), userDTO.desired_fat());
         userRepository.save(user);
 
-        return "redirect:/login";
+        return "redirect:/";
     }
 }

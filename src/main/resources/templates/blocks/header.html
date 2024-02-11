@@ -6,7 +6,13 @@
                 <li class="nav-item"><a href="/product/add" class="nav-link">Add product</a></li>
                 <li class="nav-item"><a href="/product" class="nav-link">Products</a></li>
                 <li class="nav-item"><a href="/product/favorite" class="nav-link">Favorite</a></li>
-                <li class="nav-item"><a th:href="'/eaten/' + ${day} + '-' + ${month} + '-' + ${year}" class="nav-link">Eaten</a></li>
+                <li class="nav-item"><button
+                        onclick="var currentDate = new Date();
+                        var day = currentDate.getDate();
+                        var month = currentDate.getMonth() + 1;
+                        var year = currentDate.getFullYear();
+                        var url = '/eaten/' + day + '-' + month + '-' + year;
+                        window.location.href = url;" class="nav-link">Eaten</button></li>
                 <li class="nav-item"><a href="/user/logIn" class="nav-link">Log ig</a></li>
                 <li class="nav-item"><a href="/user/signUp" class="nav-link">Sign up</a></li>
 
@@ -21,3 +27,14 @@
         </header>
     </div>
 </div>
+
+<script th:inline="javascript">
+    function eatenPage() {
+        var currentDate = new Date();
+        var day = currentDate.getVarDate();
+        var month = currentDate.getMonth() + 1;
+        var year = currentDate.getFullYear();
+        var url = '/eaten/' + day + '-' + month + '-' + year;
+        window.location.href = '/eaten/' + day + '-' + month + '-' + year;
+    }
+</script>

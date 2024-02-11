@@ -33,4 +33,8 @@ public class MainController {
         return "home";
     }
 
+
+    public String header(Model model){
+        return "";
+    }
 }

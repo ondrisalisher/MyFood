@@ -27,6 +27,21 @@ public class ProductController {
         return productService.productDetails(productId, model);
     }
 
+    @GetMapping("/{id}/admin")
+    public String productDetailsAdmin(@PathVariable(value = "id") Long productId, Model model){
+        return productService.productDetailsAdmin(productId, model);
+    }
+
+    @GetMapping("/{id}/confirmation")
+    public String productConfirmation(@PathVariable(value = "id") Long productId, Model model){
+        return productService.productConfirmation(productId, model);
+    }
+
+    @PostMapping("/{id}/confirm")
+    public String productConfirm(@PathVariable(value = "id") Long productId, Model model){
+        return productService.productConfirm(productId, model);
+    }
+
     @GetMapping("/{id}/update")
     public String updateProductPage(@PathVariable(value = "id") Long productId, Model model){
         return productService.updateProductPage(productId,model);

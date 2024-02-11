@@ -12,12 +12,12 @@
 <div class="container mt-5 mb-5">
     <h1 style="text-align: center" th:text="${date.getDayOfMonth()} + '-'+ ${date.getMonthValue()} + '-' + ${date.getYear()}"></h1>
     <div>
-        <p th:text="'Calories: ' + ${totalCalories}"/>
-        <p th:text="'Proteins: ' + ${totalProtein}"/>
-        <p th:text="'Carbohydrate: ' + ${totalCarbohydrate}"/>
-        <p th:text="'Fats: ' + ${totalFats}"/>
+        <p th:text="'Calories: ' + ${totalCalories} + ' (' + ${totalCaloriesPercentage} + '%)'"/>
+        <p th:text="'Proteins: ' + ${totalProtein} + ' (' + ${totalProteinPercentage} + '%)'"/>
+        <p th:text="'Carbohydrate: ' + ${totalCarbohydrate} + ' (' + ${totalCarbohydratePercentage} + '%)'"/>
+        <p th:text="'Fats: ' + ${totalFats} + ' (' + ${totalFatsPercentage} + '%)'"/>
     </div>
-    <h1 style="text-align: center">Products</h1>
+    <h1 style="text-align: center">Eaten Products</h1>
     <div th:each="eaten:${eaten}" class="alert alert-info mt-2">
         <h3 th:text="${eaten.getProductId().getName()}"/>
         <p th:text="'Quantity: ' + ${eaten.getQuantity()}"/>

@@ -41,7 +41,8 @@ public class SecurityConfig{
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth.requestMatchers("/","/user/signUp", "/user/logIn").permitAll()
-                        .requestMatchers("/**").authenticated())
+                        .requestMatchers("/**").authenticated()
+                )
                 .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
                 .build();
     }
@@ -57,15 +58,15 @@ public class SecurityConfig{
     }
 
 
-//    @Bean
-//    public UserDetailsService AuserDetailsService() {
-//        UserDetails user;
-//        user = User.withDefaultPasswordEncoder()
-//                .username("user")
-//                .password("user")
-//                .roles("USER")
-//                .build();
-//
-//        return new InMemoryUserDetailsManager(user);
-//    }
+    @Bean
+    public UserDetailsService AuserDetailsService() {
+        UserDetails user;
+        user = User.withDefaultPasswordEncoder()
+                .username("user")
+                .password("user")
+                .roles("USER")
+                .build();
+
+        return new InMemoryUserDetailsManager(user);
+    }
 }
