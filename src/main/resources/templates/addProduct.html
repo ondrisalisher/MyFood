@@ -11,12 +11,17 @@
 
 <div class="container mt-5 mb-5">
     <h1 style="text-align: center">Add your product</h1>
-    <form method="post">
+    <form method="post"><p>Name:</p>
         <input type="text" name="name" placeholder="Product's name" class="form-control"><br>
+        <p>Calories:</p>
         <input type="number" name="calories" placeholder="Product's calories" class="form-control"><br>
-        <input type="number" name="protein" placeholder="Product's protein" class="form-control"><br>
-        <input type="number" name="carbohydrate" placeholder="Product's carbohydrate" class="form-control"><br>
+        <p>Proteins:</p>
+        <input type="number" name="protein" placeholder="Product's proteins" class="form-control"><br>
+        <p>Carbohydrate:</p>
+        <input type="number" name="carbohydrate" placeholder="Product's carbohydrates" class="form-control"><br>
+        <p>Fats:</p>
         <input type="number" name="fat" placeholder="Product's fat" class="form-control"><br>
+
         <input type="text" name="status" hidden="hidden" th:value="${status}">
         <input type="number" name="confirmedBy_id" hidden="hidden" th:value="${confirmedBy}">
         <br>

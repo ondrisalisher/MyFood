@@ -1,10 +1,8 @@
 package org.example.myfood.DTO;
 
-import org.springframework.web.bind.annotation.RequestParam;
-
-public record UserDTO(
-        String first_name,
-        String last_name,
+public record UserDtoAdd(
+        String firstName,
+        String lastName,
         String username,
         String password,
         int desired_calories,

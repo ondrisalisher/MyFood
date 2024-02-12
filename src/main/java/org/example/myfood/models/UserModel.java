@@ -13,9 +13,9 @@ public class UserModel {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @NonNull
-    private String first_name;
+    private String firstName;
     @NonNull
-    private String last_name;
+    private String lastName;
     @NonNull
     @Column(unique = true)
     private String username;

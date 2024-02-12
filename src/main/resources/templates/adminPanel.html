@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add Food</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+</head>
+<body>
+
+<div th:insert="~{blocks/header :: header}"></div>
+
+<a href="/product" class="btn btn-warning" style="margin-left: 10px; width: 150px; height: 50px; font-size: x-large; background-color: #cff4fc; border-color: #9eeaf9"><- Back</a>
+
+
+<div class="container mt-5 mb-5">
+    <h1 style="text-align: center">Products</h1>
+    <div th:each="product:${product}" class="alert alert-info mt-2">
+        <h3 th:text="${product.getName()}"/>
+        <p th:text="'Id: ' + ${product.getId()}"></p>
+        <p th:text="'Calories: ' + ${product.getCalories()}"/>
+        <p th:text="'Proteins: ' + ${product.getProtein()}"/>
+        <p th:text="'Carbohydrate: ' + ${product.getCarbohydrate()}"/>
+        <p th:text="'Fat: ' + ${product.getFat()}"/>
+        <p th:text="'Creatied by: ' + ${product.getCreatedBy().getId} + ', ' + ${product.getCreatedBy().getUsername}"></p>
+        <p th:text="'Confirmed by: ' + ${product.getConfirmedBy().getId} + ', ' + ${product.getConfirmedBy().getUsername}"></p>
+        <p th:text="'Creation date: ' + ${product.getCreationDate()}"></p>
+        <p th:text="'Confirmation date: ' + ${product.getConfirmationDate()}"></p>
+        <p th:text="'Update date: ' + ${product.getUpdateDate()}"></p>
+
+        <a th:href="'/product/' + ${product.getId()} + '/update'" class="btn btn-warning">Edit</a>
+
+        <br>
+        <br>
+
+        <form th:action="'/product/' + ${product.getId()} + '/delete'" method="post">
+            <button type="submit" class="btn btn-warning">Delete</button>
+        </form>
+
+        <br>
+
+        <form th:action="'/product/' + ${product.getId()} + '/like'" method="post">
+            <button type="submit" class="btn btn-warning">Like</button>
+        </form>
+
+        <br>
+
+        <form th:action="'/product/' + ${product.getId} + '/eat'" method="post">
+            <input type="number" name="quantity" value="100" placeholder="Quantity" class="form-control">
+            <button type="submit" class="btn btn-waring">Eat</button>
+        </form>
+    </div>
+</div>
+
+<div th:insert="~{blocks/footer :: footer}"></div>
+
+</body>
+</html>

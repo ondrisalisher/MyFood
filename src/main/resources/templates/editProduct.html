@@ -9,24 +9,27 @@
 
 <div th:insert="~{blocks/header :: header}"></div>
 
-<!--<a th:href="'/product/' + ${product.getId}" class="btn btn-warning" style="margin-left: 10px; width: 150px; height: 50px; font-size: x-large; background-color: #cff4fc; border-color: #9eeaf9"><- Back</a>-->
+<a th:href="'/product/' + ${product.getId}" class="btn btn-warning" style="margin-left: 10px; width: 150px; height: 50px; font-size: x-large; background-color: #cff4fc; border-color: #9eeaf9"><- Back</a>
 
 <div class="container mt-5 mb-5">
     <h1 style="text-align: center">Edit your product</h1>
-    <div th:each="product : ${product}" >
-        <form th:action="'/product/' + ${product.getId} + '/update'" method="post">
-            <input type="text" name="name" placeholder="Product's name" class="form-control" th:value="${product.getName()}"><br>
-            <input type="number" name="calories" placeholder="Product's calories" class="form-control" th:value="${product.getCalories()}"><br>
-            <input type="number" name="protein" placeholder="Product's protein" class="form-control" th:value="${product.getProtein()}"><br>
-            <input type="number" name="carbohydrate" placeholder="Product's carbohydrate" class="form-control" th:value="${product.getCarbohydrate()}"><br>
-            <input type="number" name="fat" placeholder="Product's fat" class="form-control" th:value="${product.getFat()}"><br>
+    <form th:action="'/product/' + ${product.getId} + '/update'" method="post">
+        <p>Name:</p>
+        <input type="text" name="name" placeholder="Product's name" class="form-control" th:value="${product.getName()}"><br>
+        <p>Calories:</p>
+        <input type="number" name="calories" placeholder="Product's calories" class="form-control" th:value="${product.getCalories()}"><br>
+        <p>Proteins:</p>
+        <input type="number" name="protein" placeholder="Product's proteins" class="form-control" th:value="${product.getProtein()}"><br>
+        <p>Carbohydrate:</p>
+        <input type="number" name="carbohydrate" placeholder="Product's carbohydrates" class="form-control" th:value="${product.getCarbohydrate()}"><br>
+        <p>Fats:</p>
+        <input type="number" name="fat" placeholder="Product's fats" class="form-control" th:value="${product.getFat()}"><br>
 
 
-            <br>
-            <br>
-            <button type="submit" class="btn btn-success">Update</button>
-        </form>
-    </div>
+        <br>
+        <br>
+        <button type="submit" class="btn btn-success">Update</button>
+    </form>
 </div>
 
 <div th:insert="~{blocks/footer :: footer}"></div>

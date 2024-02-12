@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add Food</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+</head>
+<body>
+
+<div th:insert="~{blocks/header :: header}"></div>
+
+<a href="/product" class="btn btn-warning" style="margin-left: 10px; width: 150px; height: 50px; font-size: x-large; background-color: #cff4fc; border-color: #9eeaf9"><- Back</a>
+
+
+<div class="container mt-5 mb-5">
+    <h1 style="text-align: center">Profile</h1>
+    <p th:text="'Full name: ' + ${user.getLastName()} + ' ' + ${user.getFirstName()}"></p>
+    <p th:text="'Username: ' + ${user.getUsername()}"></p>
+    <p th:text="'Desired calories: ' + ${user.getDesired_calories()}"></p>
+    <p th:text="'Desired proteins: ' + ${user.getDesired_protein()}"></p>
+    <p th:text="'Desired carbohydrates: ' + ${user.getDesired_carbohydrate()}"></p>
+    <p th:text="'Desired fats: ' + ${user.getDesired_fat()}"></p>
+
+
+    <a th:href="'/user/profile/edit'" class="btn btn-warning">Edit profile</a>
+
+</div>
+
+<div th:insert="~{blocks/footer :: footer}"></div>
+
+</body>
+</html>

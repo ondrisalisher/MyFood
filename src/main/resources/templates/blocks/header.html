@@ -26,7 +26,7 @@
 
                 <li th:unless="${#authorization.expression('isAuthenticated()')}" class="nav-item"><a href="/login" class="nav-link">Log in</a></li>
                 <li th:unless="${#authorization.expression('isAuthenticated()')}" class="nav-item"><a href="/user/signUp" class="nav-link">Sign up</a></li>
-
+                <li th:unless="${!#authorization.expression('isAuthenticated()')}" class="nav-item"><a href="/user/profile" class="nav-link">Profile</a></li>
             </ul>
         </header>
     </div>

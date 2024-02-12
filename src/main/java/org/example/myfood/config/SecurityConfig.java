@@ -66,15 +66,14 @@ public class SecurityConfig{
     }
 
 
-    @Bean
-    public UserDetailsService AuserDetailsService() {
-        UserDetails user;
-        user = User.withDefaultPasswordEncoder()
-                .username("user")
-                .password("user")
-                .roles("USER")
-                .build();
-
-        return new InMemoryUserDetailsManager(user);
-    }
+//    @Bean
+//    public UserDetailsService AuserDetailsService() {
+//        UserDetails user = User.withDefaultPasswordEncoder()
+//                .username("adminInMemory")
+//                .password("admin")
+//                .roles("ADMIN")
+//                .build();
+//
+//        return new InMemoryUserDetailsManager(user);
+//    }
 }

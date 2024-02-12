@@ -161,10 +161,8 @@ public class ProductServiceImpl implements ProductService {
             return "redirect:/product";
         }
 
-        Optional<ProductModel> product = productRepository.findById(productId);
-        ArrayList<ProductModel> res = new ArrayList<>();
-        product.ifPresent(res::add);
-        model.addAttribute("product", res);
+        ProductModel product = productRepository.findById(productId).get();
+        model.addAttribute("product", product);
 
         return "editProduct";
     }
