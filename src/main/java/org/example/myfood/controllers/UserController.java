@@ -26,7 +26,7 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public String logInPage(Model model){
-        return "login";
+    public String loginPage(Model model){
+        return userService.login();
     }
 }

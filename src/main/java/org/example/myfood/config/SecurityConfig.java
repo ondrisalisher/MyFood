@@ -1,6 +1,5 @@
 package org.example.myfood.config;
 
-import org.example.myfood.models.UserModel;
 import org.example.myfood.services.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,10 +39,19 @@ public class SecurityConfig{
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/","/user/signUp", "/user/logIn").permitAll()
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/","/user/signUp", "/user/login").permitAll()
                         .requestMatchers("/**").authenticated()
                 )
-                .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
+                .formLogin(form -> form
+                        .loginPage("/user/login")
+                        .permitAll()
+                        .defaultSuccessUrl("/", true) // Перенаправьте после успешного входа
+                        .failureUrl("/user/login?error=true") // Перенаправьте в случае ошибки входа
+                )
+                .logout(logout -> logout
+                        .logoutSuccessUrl("/") // Перенаправьте после успешного выхода
+                        .permitAll() // Разрешите доступ к странице выхода всем
+                )
                 .build();
     }
 

@@ -36,7 +36,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public String addProduct(ProductDto productDto) {
-        LocalDate creation_date = LocalDate.now();
+        Date creation_date = new Date();
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserModel user = new UserModel();
@@ -54,7 +54,12 @@ public class ProductServiceImpl implements ProductService {
         product.setFat(productDto.fat());
         product.setCreatedBy(user);
         product.setCreationDate(creation_date);
-        product.setConfirmedBy(userRepository.findById(productDto.confirmedBy_id()).get());
+        try {
+            product.setConfirmedBy(userRepository.findById(productDto.confirmedBy_id()).get());
+        }catch (Exception e){
+
+        }
+
         product.setStatus(productDto.status());
 
         productRepository.save(product);
@@ -216,11 +221,14 @@ public class ProductServiceImpl implements ProductService {
             model.addAttribute("unconfirmed", unconfirmed);
             Iterable<ProductModel> confirmed = productRepository.findByStatus("confirmed");
             model.addAttribute("confirmed", confirmed);
+
             model.addAttribute("forAdmin", "/admin");
         }
         else if(user.getRole().equals("ROLE_USER")){
             Iterable<ProductModel> confirmed = productRepository.findByStatus("confirmed");
             model.addAttribute("confirmed", confirmed);
+
+            model.addAttribute("forAdmin", "");
         }
 
 

@@ -37,7 +37,7 @@ public class ProductModel {
     private UserModel confirmedBy;
 
     @NonNull
-    private LocalDate creationDate;
+    private Date creationDate;
     private Date confirmationDate;
     private Date updateDate;
 

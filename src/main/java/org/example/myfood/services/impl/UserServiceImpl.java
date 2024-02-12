@@ -20,9 +20,30 @@ public class UserServiceImpl implements UserService {
 
         String password_encoded = passwordEncoder.encode(userDTO.password());
         String role = "ROLE_USER";
-        UserModel user = new UserModel(userDTO.first_name(), userDTO.last_name(), userDTO.username(), password_encoded, role, userDTO.desired_calories(), userDTO.desired_protein(), userDTO.desired_carbohydrate(), userDTO.desired_fat());
+        int desired_calories =userDTO.desired_calories();
+        int desired_protein =userDTO.desired_protein();
+        int desired_carbohydrate =userDTO.desired_carbohydrate();
+        int desired_fat =userDTO.desired_fat();
+        if (desired_calories <= 0){
+            desired_calories = 1;
+        }
+        if (desired_protein <= 0){
+            desired_protein = 1;
+        }
+        if (desired_carbohydrate <= 0){
+            desired_carbohydrate = 1;
+        }
+        if (desired_fat <= 0){
+            desired_fat = 1;
+        }
+        UserModel user = new UserModel(userDTO.first_name(), userDTO.last_name(), userDTO.username(), password_encoded, role, desired_calories, desired_protein, desired_carbohydrate, desired_fat);
         userRepository.save(user);
 
-        return "redirect:/";
+        return "redirect:/login";
+    }
+
+    @Override
+    public String login() {
+        return "login";
     }
 }
