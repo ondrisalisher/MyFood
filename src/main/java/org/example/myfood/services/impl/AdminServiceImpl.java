@@ -1,6 +1,7 @@
 package org.example.myfood.services.impl;
 
 import lombok.AllArgsConstructor;
+import org.example.myfood.DTO.UserDtoChangeRole;
 import org.example.myfood.models.ProductModel;
 import org.example.myfood.models.UserModel;
 import org.example.myfood.repositories.UserRepository;
@@ -75,5 +76,17 @@ public class AdminServiceImpl implements AdminService {
     public String deleteUser(Long userId) {
         userRepository.deleteById(userId);
         return "redirect:/admin/users";
+    }
+
+    @Override
+    public String changeRole(Long userId, UserDtoChangeRole userDto) {
+        UserModel user = userRepository.findById(userId).get();
+        if(userDto.role().equals("toAdmin")){
+            user.setRole("ROLE_ADMIN");
+        }else{
+            user.setRole("ROLE_USER");
+        }
+        userRepository.save(user);
+        return "redirect:/admin/user/"+userId;
     }
 }

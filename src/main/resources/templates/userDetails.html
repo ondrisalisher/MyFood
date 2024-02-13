@@ -9,7 +9,7 @@
 
 <div th:insert="~{blocks/header :: header}"></div>
 
-<a href="/product" class="btn btn-warning" style="margin-left: 10px; width: 150px; height: 50px; font-size: x-large; background-color: #cff4fc; border-color: #9eeaf9"><- Back</a>
+<a href="/admin/user" class="btn btn-warning" style="margin-left: 10px; width: 150px; height: 50px; font-size: x-large; background-color: #cff4fc; border-color: #9eeaf9"><- Back</a>
 
 
 <div class="container mt-5 mb-5">
@@ -32,9 +32,13 @@
 
     <br><br>
     <form th:action="'/admin/user/' + ${user.getId()} + '/changeRole'" method="post">
-        <input type="checkbox" class="form-check-input" id="flexCheckDefault">
-        <label class="form-check-label" for="flexCheckDefault">Make admin</label>
+        <input name="role" value="toAdmin" type="radio" class="form-check-input" id="toAdmin">
+        <label class="form-check-label" for="toAdmin">Make admin</label>
         <br>
+        <input name="role" value="toUser" type="radio" class="form-check-input" id="toUser" checked>
+        <label class="form-check-label" for="toUser">Make user</label>
+        <br>
+
         <button type="submit" class="btn btn-warning">Change role</button>
     </form>
     <br>

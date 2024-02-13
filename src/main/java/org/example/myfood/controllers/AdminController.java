@@ -1,13 +1,11 @@
 package org.example.myfood.controllers;
 
 import lombok.AllArgsConstructor;
+import org.example.myfood.DTO.UserDtoChangeRole;
 import org.example.myfood.services.AdminService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/admin")
@@ -20,7 +18,7 @@ public class AdminController {
         return adminService.adminPanel();
     }
 
-    @GetMapping("/users")
+    @GetMapping("/user")
     public String users(Model model){
         return adminService.users(model);
     }
@@ -33,5 +31,10 @@ public class AdminController {
     @PostMapping("/user/{id}/delete")
     public String userDelete(@PathVariable(value = "id")Long userId, Model model){
         return adminService.deleteUser(userId);
+    }
+
+    @PostMapping("/user/{id}/changeRole")
+    public String changeRole(@PathVariable(value = "id") Long userId, @ModelAttribute UserDtoChangeRole userDto){
+        return adminService.changeRole(userId, userDto);
     }
 }
