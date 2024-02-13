@@ -2,6 +2,7 @@ package org.example.myfood.services.impl;
 
 import lombok.AllArgsConstructor;
 import org.example.myfood.DTO.UserDtoAdd;
+import org.example.myfood.DTO.UserDtoChangePassword;
 import org.example.myfood.DTO.UserDtoEditProfile;
 import org.example.myfood.models.UserModel;
 import org.example.myfood.repositories.UserRepository;
@@ -22,7 +23,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String addUser(UserDtoAdd userDTO) {
-
+        if(!userDTO.password().equals(userDTO.passwordConfirm())){
+            return "redirect:/user/signUp";
+        }
         String password_encoded = passwordEncoder.encode(userDTO.password());
         String role = "ROLE_USER";
         int desired_calories =userDTO.desired_calories();
@@ -41,8 +44,18 @@ public class UserServiceImpl implements UserService {
         if (desired_fat <= 0){
             desired_fat = 1;
         }
-        UserModel user = new UserModel(userDTO.firstName(), userDTO.lastName(), userDTO.username(), password_encoded, role, desired_calories, desired_protein, desired_carbohydrate, desired_fat);
+        UserModel user = new UserModel();
+        user.setFirstName(userDTO.firstName());
+        user.setLastName(userDTO.lastName());
+        user.setUsername(userDTO.username());
+        user.setPassword(password_encoded);
+        user.setRole(role);
+        user.setDesired_calories(desired_calories);
+        user.setDesired_protein(desired_protein);
+        user.setDesired_carbohydrate(desired_carbohydrate);
+        user.setDesired_fat(desired_fat);
         userRepository.save(user);
+
 
         return "redirect:/login";
     }
@@ -87,6 +100,44 @@ public class UserServiceImpl implements UserService {
 //        user.setUsername(userDTO.username());
 //        user.setUsername(userDTO.username());
         userRepository.save(user);
+        return "redirect:/user/profile";
+    }
+
+    @Override
+    public String changePassword(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserModel user = new UserModel();
+        if (authentication != null && authentication.isAuthenticated()) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            user = userRepository.findByUsername(userDetails.getUsername()).get();
+        }
+
+        model.addAttribute("user", user);
+        return "changePassword";
+    }
+
+    @Override
+    public String changePassword(Long userId, UserDtoChangePassword userDTO, Model model) {
+        UserModel user = userRepository.findById(userId).get();
+
+        if(!passwordEncoder.matches(userDTO.oldPassword(), user.getPassword())){
+            model.addAttribute("error", "Old password is incorrect");
+            model.addAttribute("user", user);
+            return "changePassword";
+        }
+
+        if(!userDTO.password().equals(userDTO.passwordConfirm())){
+            model.addAttribute("error", "New password and confirmation do not match");
+            model.addAttribute("user", user);
+            return "changePassword";
+        }
+
+
+
+        String passwordEncoded = passwordEncoder.encode(userDTO.password());
+        user.setPassword(passwordEncoded);
+        userRepository.save(user);
+
         return "redirect:/user/profile";
     }
 }
