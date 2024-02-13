@@ -2,6 +2,7 @@ package org.example.myfood.services;
 
 
 import org.example.myfood.DTO.UserDtoAdd;
+import org.example.myfood.DTO.UserDtoChangeMacronutrients;
 import org.example.myfood.DTO.UserDtoChangePassword;
 import org.example.myfood.DTO.UserDtoEditProfile;
 import org.springframework.ui.Model;
@@ -20,4 +21,8 @@ public interface UserService {
     public String changePassword(Model model);
 
     public String changePassword(Long userId, UserDtoChangePassword userDTO, Model model);
+
+    public String changeMacronutrients(Model model);
+
+    public String changeMacronutrients(Long userId, UserDtoChangeMacronutrients userDTO, Model model);
 }

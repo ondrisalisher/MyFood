@@ -29,6 +29,8 @@ public interface ProductService {
 
     public String likeProduct(Long productId);
 
+    public String deleteProductFromFavorite(Long productId);
+
     public String eatProduct(Long productId, EatenDTO eatenDTO);
 
     public String favorite(Model model);

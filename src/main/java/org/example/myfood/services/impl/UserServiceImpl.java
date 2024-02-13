@@ -2,6 +2,7 @@ package org.example.myfood.services.impl;
 
 import lombok.AllArgsConstructor;
 import org.example.myfood.DTO.UserDtoAdd;
+import org.example.myfood.DTO.UserDtoChangeMacronutrients;
 import org.example.myfood.DTO.UserDtoChangePassword;
 import org.example.myfood.DTO.UserDtoEditProfile;
 import org.example.myfood.models.UserModel;
@@ -73,6 +74,12 @@ public class UserServiceImpl implements UserService {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             user = userRepository.findByUsername(userDetails.getUsername()).get();
         }
+        if(user.getRole().equals("ROLE_ADMIN")){
+            model.addAttribute("hidden", "false");
+        }
+        else{
+            model.addAttribute("hidden", "hidden");
+        }
 
         model.addAttribute("user", user);
         return "profile";
@@ -136,6 +143,49 @@ public class UserServiceImpl implements UserService {
 
         String passwordEncoded = passwordEncoder.encode(userDTO.password());
         user.setPassword(passwordEncoded);
+        userRepository.save(user);
+
+        return "redirect:/user/profile";
+    }
+
+    @Override
+    public String changeMacronutrients(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserModel user = new UserModel();
+        if (authentication != null && authentication.isAuthenticated()) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            user = userRepository.findByUsername(userDetails.getUsername()).get();
+        }
+
+        model.addAttribute("user", user);
+        return "changeMacronutrients";
+    }
+
+    @Override
+    public String changeMacronutrients(Long userId, UserDtoChangeMacronutrients userDTO, Model model) {
+        UserModel user = userRepository.findById(userId).get();
+
+        int desired_calories =userDTO.desired_calories();
+        int desired_protein =userDTO.desired_protein();
+        int desired_carbohydrate =userDTO.desired_carbohydrate();
+        int desired_fat =userDTO.desired_fat();
+        if (desired_calories <= 0){
+            desired_calories = 1;
+        }
+        if (desired_protein <= 0){
+            desired_protein = 1;
+        }
+        if (desired_carbohydrate <= 0){
+            desired_carbohydrate = 1;
+        }
+        if (desired_fat <= 0){
+            desired_fat = 1;
+        }
+
+        user.setDesired_calories(desired_calories);
+        user.setDesired_protein(desired_protein);
+        user.setDesired_carbohydrate(desired_carbohydrate);
+        user.setDesired_fat(desired_fat);
         userRepository.save(user);
 
         return "redirect:/user/profile";

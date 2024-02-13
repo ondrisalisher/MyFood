@@ -14,13 +14,15 @@
 <div class="container mt-5 mb-5">
     <h1 style="text-align: center">Add your product</h1>
     <p th:text="${error}"></p>
-    <form th:action="'/user/' + ${user.getId()} + '/changePassword'" method="post">
-        <p>Old password:</p>
-        <input type="text" name="oldPassword" placeholder="Old password" class="form-control"><br>
-        <p>New password:</p>
-        <input type="text" name="password" placeholder="New password" class="form-control"><br>
-        <p>Confirm password:</p>
-        <input type="text" name="passwordConfirm" placeholder="Confirm new password" class="form-control"><br>
+    <form th:action="'/user/' + ${user.getId()} + '/changeMacronutrients'" method="post">
+        <p>Desired calories:</p>
+        <input type="text" name="desired_calories" placeholder="Desired calories" th:value="${user.getDesired_calories()}" class="form-control"><br>
+        <p>Desired proteins:</p>
+        <input type="text" name="desired_protein" placeholder="Desired proteins" th:value="${user.getDesired_protein()}" class="form-control"><br>
+        <p>Desired carbohydrates:</p>
+        <input type="text" name="desired_carbohydrate" placeholder="Desired carbohydrates" th:value="${user.getDesired_carbohydrate()}" class="form-control"><br>
+        <p>Desired fats:</p>
+        <input type="text" name="desired_fat" placeholder="Desired fats" th:value="${user.getDesired_fat()}" class="form-control"><br>
         <br>
         <button type="submit" class="btn btn-success">Confirm</button>
     </form>

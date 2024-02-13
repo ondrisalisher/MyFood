@@ -11,5 +11,5 @@ public interface    FavoriteRepository extends CrudRepository<FavoriteModel,Long
     Iterable<FavoriteModel> findByUserId(UserModel userId);
     boolean existsByUserIdAndProductId(UserModel user, ProductModel product);
 
-
+    Optional<FavoriteModel> findByUserIdAndProductId(UserModel user, ProductModel product);
 }

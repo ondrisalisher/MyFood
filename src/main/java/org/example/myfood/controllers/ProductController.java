@@ -77,6 +77,11 @@ public class ProductController {
         return productService.likeProduct(productId);
     }
 
+    @PostMapping("/favorite/{id}/delete")
+    public String deleteProductFromFavorite(@PathVariable(value = "id") Long productId){
+        return productService.deleteProductFromFavorite(productId);
+    }
+
     @PostMapping("/{id}/eat")
     public String eatProduct(@PathVariable(value = "id") Long productId, @ModelAttribute EatenDTO eatenDTO){
         return productService.eatProduct(productId, eatenDTO);

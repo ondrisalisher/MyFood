@@ -2,6 +2,7 @@ package org.example.myfood.controllers;
 
 import lombok.AllArgsConstructor;
 import org.example.myfood.DTO.UserDtoAdd;
+import org.example.myfood.DTO.UserDtoChangeMacronutrients;
 import org.example.myfood.DTO.UserDtoChangePassword;
 import org.example.myfood.DTO.UserDtoEditProfile;
 import org.example.myfood.services.UserService;
@@ -55,5 +56,15 @@ public class UserController {
     @PostMapping("/{id}/changePassword")
     public String changePassword(@PathVariable(value = "id") Long userId, UserDtoChangePassword userDTO, Model model){
         return userService.changePassword(userId, userDTO, model);
+    }
+
+    @GetMapping("/profile/changeMacronutrients")
+    public String changeMacronutrients(Model model){
+        return userService.changeMacronutrients(model);
+    }
+
+    @PostMapping("/{id}/changeMacronutrients")
+    public String changeMacronutrients(@PathVariable(value = "id") Long userId, UserDtoChangeMacronutrients userDTO, Model model){
+        return userService.changeMacronutrients(userId, userDTO, model);
     }
 }

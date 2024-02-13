@@ -201,6 +201,8 @@ public class ProductServiceImpl implements ProductService {
         ArrayList<ProductModel> res = new ArrayList<>();
         product.ifPresent(res::add);
         model.addAttribute("product", res);
+        //todo
+        model.addAttribute("Likes", 0);
 
         return "productDetailsAdmin";
     }
@@ -259,6 +261,23 @@ public class ProductServiceImpl implements ProductService {
         }
 
         return "redirect:/product/"+ productId;
+    }
+
+    @Override
+    public String deleteProductFromFavorite(Long productId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserModel user = new UserModel();
+        if (authentication != null && authentication.isAuthenticated()) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            user = userRepository.findByUsername(userDetails.getUsername()).get();
+        }
+        ProductModel product = productRepository.findById(productId).get();
+
+        FavoriteModel favorie = favoriteRepository.findByUserIdAndProductId(user, product).get();
+
+        favoriteRepository.delete(favorie);
+
+        return "redirect:/product/favorite";
     }
 
     @Override

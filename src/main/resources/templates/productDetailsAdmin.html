@@ -13,9 +13,8 @@
 
 
 <div class="container mt-5 mb-5">
-    <h1 style="text-align: center">Products</h1>
     <div th:each="product:${product}" class="alert alert-info mt-2">
-        <h3 th:text="${product.getName()}"/>
+        <h1 th:text="${product.getName()}"/>
         <p th:text="'Id: ' + ${product.getId()}"></p>
         <p th:text="'Calories: ' + ${product.getCalories()}"/>
         <p th:text="'Proteins: ' + ${product.getProtein()}"/>
@@ -26,6 +25,8 @@
         <p th:text="'Creation date: ' + ${product.getCreationDate()}"></p>
         <p th:text="'Confirmation date: ' + ${product.getConfirmationDate()}"></p>
         <p th:text="'Update date: ' + ${product.getUpdateDate()}"></p>
+
+        <p th:text="'Likes: ' + ${}"></p>
 
         <a th:href="'/product/' + ${product.getId()} + '/update'" class="btn btn-warning">Edit</a>
 
