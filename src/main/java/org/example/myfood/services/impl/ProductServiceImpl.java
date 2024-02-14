@@ -1,8 +1,13 @@
 package org.example.myfood.services.impl;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import lombok.AllArgsConstructor;
 import org.example.myfood.DTO.EatenDTO;
 import org.example.myfood.DTO.ProductDto;
+import org.example.myfood.DTO.ProductDtoSearch;
 import org.example.myfood.models.EatenModel;
 import org.example.myfood.models.FavoriteModel;
 import org.example.myfood.models.ProductModel;
@@ -12,6 +17,7 @@ import org.example.myfood.repositories.FavoriteRepository;
 import org.example.myfood.repositories.ProductRepository;
 import org.example.myfood.repositories.UserRepository;
 import org.example.myfood.services.ProductService;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,6 +29,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -224,7 +231,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public String products(Model model) {
+    public String products(Model model, ProductDtoSearch productDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserModel user = new UserModel();
         if (authentication != null && authentication.isAuthenticated()) {
@@ -232,20 +239,42 @@ public class ProductServiceImpl implements ProductService {
             user = userRepository.findByUsername(userDetails.getUsername()).get();
         }
 
+        String searched = "";
+
+        if(!(productDto.search() == null)) {
+            searched = productDto.search();
+        }
+
+        String finalSearched = searched;
+        Specification<ProductModel> search = new Specification<ProductModel>() {
+            @Override
+            public Predicate toPredicate(Root<ProductModel> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+                return criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + finalSearched.toLowerCase() + "%");
+            }
+        };
+
+        List<ProductModel> confirmedList = new ArrayList<>();
+        
+
+        Iterable<ProductModel> confirmed = productRepository.findAll(search);
+        for(ProductModel product:confirmed){
+            confirmedList.add(product);
+        }
+
+        confirmedList.removeIf(product -> !product.getStatus().equals("confirmed"));
+
+
         if(user.getRole().equals("ROLE_ADMIN")){
             Iterable<ProductModel> unconfirmed = productRepository.findByStatus("unconfirmed");
             model.addAttribute("unconfirmed", unconfirmed);
-            Iterable<ProductModel> confirmed = productRepository.findByStatus("confirmed");
-            model.addAttribute("confirmed", confirmed);
+            model.addAttribute("confirmed", confirmedList);
         }
         else if(user.getRole().equals("ROLE_USER")){
-            Iterable<ProductModel> confirmed = productRepository.findByStatus("confirmed");
-            model.addAttribute("confirmed", confirmed);
+            model.addAttribute("confirmed", confirmedList);
 
         }
 
-
-        Iterable<ProductModel> products = productRepository.findAll();
+        Iterable<ProductModel> products = productRepository.findAll(search);
         model.addAttribute("products", products);
 
         return "products";

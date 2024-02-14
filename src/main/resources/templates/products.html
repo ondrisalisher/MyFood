@@ -19,6 +19,12 @@
     </div>
 
     <h1 style="text-align: center">Products</h1>
+    <form th:action="@{/product}" method="get">
+        <label>
+            <input name="search" type="text" placeholder="Search...">
+        </label>
+        <button type="submit">⌕</button>
+    </form>
     <div th:each="confirmed:${confirmed}" class="alert alert-info mt-2">
         <h3 th:text="${confirmed.getName()}"/>
         <p th:text="'Calories: ' + ${confirmed.getCalories()}"/>
