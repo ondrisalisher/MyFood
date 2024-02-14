@@ -22,7 +22,7 @@ public class EatenController {
     }
 
     @GetMapping("/{id}/details")
-    public String eatenDeteils(@PathVariable(value = "id") Long eatenId, Model model){
+    public String eatenDetails(@PathVariable(value = "id") Long eatenId, Model model){
         return eatenService.eatenDetails(eatenId, model);
     }
 

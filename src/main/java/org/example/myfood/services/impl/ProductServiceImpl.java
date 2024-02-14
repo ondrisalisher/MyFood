@@ -16,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
 import java.time.LocalDate;
@@ -61,7 +62,9 @@ public class ProductServiceImpl implements ProductService {
         }
 
         product.setStatus(productDto.status());
-
+        if(productDto.status().equals("confirmed")){
+            product.setConfirmationDate(creation_date);
+        }
         productRepository.save(product);
 
         return "redirect:/product";
@@ -104,16 +107,15 @@ public class ProductServiceImpl implements ProductService {
             return "redirect:/product";
         }
 
-        Optional<ProductModel> product = productRepository.findById(productId);
-        ArrayList<ProductModel> res = new ArrayList<>();
-        product.ifPresent(res::add);
-        model.addAttribute("product", res);
+        ProductModel product = productRepository.findById(productId).get();
+        model.addAttribute("product", product);
 
         return "productConfirmation";
     }
 
     @Override
     public String productConfirm(Long productId, Model model) {
+        Date confirmationDate = new Date();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserModel user = new UserModel();
         if (authentication != null && authentication.isAuthenticated()) {
@@ -125,14 +127,19 @@ public class ProductServiceImpl implements ProductService {
 
         product.setConfirmedBy(user);
         product.setStatus("confirmed");
+        product.setConfirmationDate(confirmationDate);
         productRepository.save(product);
 
         return "redirect:/product";
     }
 
     @Override
+    @Transactional
     public String deleteProduct(Long productId) {
-        productRepository.deleteById(productId);
+        ProductModel product = productRepository.findById(productId).get();
+        favoriteRepository.deleteByProductId(product);
+        eatenRepository.deleteByProductId(product);
+        productRepository.delete(product);
         return "redirect:/product";
     }
 
@@ -150,8 +157,13 @@ public class ProductServiceImpl implements ProductService {
         product.setUpdateDate(update_date);
 
         productRepository.save(product);
+        if (product.getStatus().equals("confirmed")){
+            return "redirect:/product/{id}";
+        }
+        else {
+            return "redirect:/product/" + productId + "/confirmation";
+        }
 
-        return "redirect:/product/{id}";
     }
 
     @Override
@@ -169,42 +181,46 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public String productDetails(Long productId, Model model) {
+
         if (!productRepository.existsById(productId)) {
             return "redirect:/product";
         }
 
-        Optional<ProductModel> product = productRepository.findById(productId);
-        ArrayList<ProductModel> res = new ArrayList<>();
-        product.ifPresent(res::add);
-        model.addAttribute("product", res);
-
-        return "productDetails";
-    }
-
-    @Override
-    public String productDetailsAdmin(Long productId, Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserModel user = new UserModel();
         if (authentication != null && authentication.isAuthenticated()) {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             user = userRepository.findByUsername(userDetails.getUsername()).get();
         }
+        if(user.getRole().equals("ROLE_ADMIN")){
+            ProductModel product = productRepository.findById(productId).get();
+            model.addAttribute("product", product);
+
+            Iterable<FavoriteModel> liked = favoriteRepository.findByProductId(product);
+            int likes = 0;
+            for(FavoriteModel element: liked){
+                likes = likes + 1;
+            }
+            model.addAttribute("likes", likes);
+
+            return "productDetailsAdmin";
+        }
+
         if(user.getRole().equals("ROLE_USER")){
-            return "redirect:/product/"+productId;
+            ProductModel product = productRepository.findById(productId).get();
+            model.addAttribute("product", product);
+
+            Iterable<FavoriteModel> liked = favoriteRepository.findByProductId(product);
+            int likes = 0;
+            for(FavoriteModel element: liked){
+                likes = likes + 1;
+            }
+            model.addAttribute("likes", likes);
+
+            return "productDetails";
         }
 
-        if (!productRepository.existsById(productId)) {
-            return "redirect:/product";
-        }
-
-        Optional<ProductModel> product = productRepository.findById(productId);
-        ArrayList<ProductModel> res = new ArrayList<>();
-        product.ifPresent(res::add);
-        model.addAttribute("product", res);
-        //todo
-        model.addAttribute("Likes", 0);
-
-        return "productDetailsAdmin";
+        return null;
     }
 
     @Override
@@ -221,14 +237,11 @@ public class ProductServiceImpl implements ProductService {
             model.addAttribute("unconfirmed", unconfirmed);
             Iterable<ProductModel> confirmed = productRepository.findByStatus("confirmed");
             model.addAttribute("confirmed", confirmed);
-
-            model.addAttribute("forAdmin", "/admin");
         }
         else if(user.getRole().equals("ROLE_USER")){
             Iterable<ProductModel> confirmed = productRepository.findByStatus("confirmed");
             model.addAttribute("confirmed", confirmed);
 
-            model.addAttribute("forAdmin", "");
         }
 
 

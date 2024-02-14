@@ -14,4 +14,8 @@ public interface EatenRepository extends CrudRepository<EatenModel,Long>{
     Iterable<EatenModel> findByUserIdAndDate(UserModel user, LocalDate date);
 
     EatenModel findByUserIdAndProductId(UserModel userModel, ProductModel productModel);
+
+    void deleteByProductId(ProductModel product);
+
+    void deleteByUserId(UserModel user);
 }

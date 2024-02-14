@@ -12,4 +12,11 @@ public interface    FavoriteRepository extends CrudRepository<FavoriteModel,Long
     boolean existsByUserIdAndProductId(UserModel user, ProductModel product);
 
     Optional<FavoriteModel> findByUserIdAndProductId(UserModel user, ProductModel product);
+
+    Iterable<FavoriteModel> findByProductId(ProductModel product);
+
+    void deleteByProductId(ProductModel product);
+
+    void deleteByUserId(UserModel user);
+
 }

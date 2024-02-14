@@ -27,7 +27,6 @@ public class ProductModel {
     @NonNull
     private int fat;
 
-    @NonNull
     @ManyToOne
     @JoinColumn(name = "created_by")
     private UserModel createdBy;

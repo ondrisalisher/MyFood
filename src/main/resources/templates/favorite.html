@@ -15,9 +15,9 @@
         <h3 th:text="${product.getProductId().getName()}"/>
         <p th:text="'Calories: ' + ${product.getProductId().getCalories()}"/>
         <a th:href="'/product/' + ${product.getProductId().getId()}" class="btn btn-warning">Details</a>
-        <br>
+        <br><br>
         <form th:action="'/product/favorite/' + ${product.getProductId().getId()} + '/delete'" method="post">
-            <button type="submit" class="btn btn-warning">Delete</button>
+            <button type="submit" class="btn btn-warning">Dislike</button>
         </form>
     </div>
 </div>

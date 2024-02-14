@@ -104,10 +104,8 @@ public class UserServiceImpl implements UserService {
         user.setUsername(userDTO.username());
         user.setFirstName(userDTO.firstName());
         user.setLastName(userDTO.lastName());
-//        user.setUsername(userDTO.username());
-//        user.setUsername(userDTO.username());
         userRepository.save(user);
-        return "redirect:/user/profile";
+        return "redirect:/user/login";
     }
 
     @Override

@@ -23,8 +23,6 @@ public interface ProductService {
 
     public String productDetails(Long productId, Model model);
 
-    public String productDetailsAdmin(Long productId, Model model);
-
     public String products(Model model);
 
     public String likeProduct(Long productId);

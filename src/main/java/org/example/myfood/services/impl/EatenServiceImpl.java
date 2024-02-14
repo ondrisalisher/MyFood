@@ -87,10 +87,12 @@ public class EatenServiceImpl implements EatenService {
             return "redirect:/eaten/" + localDateDay + "-" + localDateMonth + "-" + localDateYear;
         }
 
-        Optional<EatenModel> product = eatenRepository.findById(eatenId);
-        ArrayList<EatenModel> res = new ArrayList<>();
-        product.ifPresent(res::add);
-        model.addAttribute("product", res);
+        model.addAttribute("year", localDateYear);
+        model.addAttribute("month", localDateMonth);
+        model.addAttribute("day", localDateDay);
+
+        EatenModel product = eatenRepository.findById(eatenId).get();
+        model.addAttribute("eatenProduct", product);
 
         return "eatenDetails";
     }

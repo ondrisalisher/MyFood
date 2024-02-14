@@ -12,27 +12,27 @@
 <a href="/product" class="btn btn-warning" style="margin-left: 10px; width: 150px; height: 50px; font-size: x-large; background-color: #cff4fc; border-color: #9eeaf9"><- Back</a>
 
 
-<div class="container mt-5 mb-5">
-    <div th:each="product:${product}" class="alert alert-info mt-2">
-        <h1 th:text="${product.getName()}"/>
-        <p th:text="'Calories: ' + ${product.getCalories()}"/>
-        <p th:text="'Proteins: ' + ${product.getProtein()}"/>
-        <p th:text="'Carbohydrate: ' + ${product.getCarbohydrate()}"/>
-        <p th:text="'Fat: ' + ${product.getFat()}"/>
+<div class="container mt-5 mb-5 alert alert-info mt-2">
+    <h1 th:text="${product.getName()}"/>
+    <p th:text="'Calories: ' + ${product.getCalories()}"/>
+    <p th:text="'Proteins: ' + ${product.getProtein()}"/>
+    <p th:text="'Carbohydrate: ' + ${product.getCarbohydrate()}"/>
+    <p th:text="'Fat: ' + ${product.getFat()}"/>
+    <p th:text="'Likes: ' + ${likes}"></p>
+    <br>
 
-        <br>
+    <form th:action="'/product/' + ${product.getId()} + '/like'" method="post">
+        <button type="submit" class="btn btn-warning">Like</button>
+    </form>
 
-        <form th:action="'/product/' + ${product.getId()} + '/like'" method="post">
-            <button type="submit" class="btn btn-warning">Like</button>
-        </form>
+    <br>
+    <br>
 
-        <br>
-
-        <form th:action="'/product/' + ${product.getId} + '/eat'" method="post">
-            <input type="number" name="quantity" value="100" placeholder="Quantity" class="form-control">
-            <button type="submit" class="btn btn-waring">Eat</button>
-        </form>
-    </div>
+    <form th:action="'/product/' + ${product.getId} + '/eat'" method="post">
+        <p>Grams:</p>
+        <input type="number" name="quantity" value="100" placeholder="Quantity" class="form-control">
+        <button type="submit" class="btn btn-waring">Eat</button>
+    </form>
 </div>
 
 <div th:insert="~{blocks/footer :: footer}"></div>

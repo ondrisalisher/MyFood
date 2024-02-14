@@ -9,7 +9,7 @@
 
 <div th:insert="~{blocks/header :: header}"></div>
 
-<div class="container mt-5 mb-5">
+<div class="container mt-5 mb-5 alert alert-info mt-2">
     <h1 style="text-align: center">Profile</h1>
     <p th:text="'Full name: ' + ${user.getLastName()} + ' ' + ${user.getFirstName()}"></p>
     <p th:text="'Username: ' + ${user.getUsername()}"></p>

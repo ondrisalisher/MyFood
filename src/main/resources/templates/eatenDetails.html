@@ -11,28 +11,27 @@
 
 <a th:href="'/eaten/' + ${day} + '-' + ${month} + '-' + ${year}" class="btn btn-warning" style="margin-left: 10px; width: 150px; height: 50px; font-size: x-large; background-color: #cff4fc; border-color: #9eeaf9"><- Back</a>
 
-<div class="container mt-5 mb-5">
-    <h1 style="text-align: center">Products</h1>
-    <div th:each="product:${product}" class="alert alert-info mt-2">
-        <h3 th:text="${product.getProductId().getName()}"/>
-        <p th:text="'Calories: ' + ${product.getProductId().getCalories()}"/>
-        <p th:text="'Proteins: ' + ${product.getProductId().getProtein()}"/>
-        <p th:text="'Carbohydrate: ' + ${product.getProductId().getCarbohydrate()}"/>
-        <p th:text="'Fat: ' + ${product.getProductId().getFat()}"/>
-        <br>
-        <br>
+<div class="container mt-5 mb-5 alert alert-info mt-2">
+    <h1 style="text-align: center" th:text="${eatenProduct.getProductId().getName()}"></h1>
+    <p th:text="'Quantity: ' + ${eatenProduct.getQuantity()} + 'g.'"/>
+    <p th:text="'Calories: ' + ${eatenProduct.getQuantity() * eatenProduct.getProductId().getCalories() / 100}"/>
+    <p th:text="'Proteins: ' + ${eatenProduct.getQuantity() * eatenProduct.getProductId().getProtein() / 100}"/>
+    <p th:text="'Carbohydrates: ' + ${eatenProduct.getQuantity() * eatenProduct.getProductId().getCarbohydrate() / 100}"/>
+    <p th:text="'Fats: ' + ${eatenProduct.getQuantity() * eatenProduct.getProductId().getFat() / 100}"/>
 
-        <form th:action="'/eaten/' + ${product.getId()} + '/delete'" method="post">
-            <button type="submit" class="btn btn-warning">Delete</button>
-        </form>
 
-        <br>
+    <br>
+    <br>
 
-        <form th:action="'/eaten/' + ${product.getProductId().getId()} + '/like'" method="post">
-            <button type="submit" class="btn btn-warning">Like</button>
-        </form>
+    <form th:action="'/eaten/' + ${eatenProduct.getId()} + '/delete'" method="post">
+        <button type="submit" class="btn btn-warning">Delete</button>
+    </form>
 
-    </div>
+    <br>
+
+    <form th:action="'/eaten/' + ${eatenProduct.getProductId().getId()} + '/like'" method="post">
+        <button type="submit" class="btn btn-warning">Like</button>
+    </form>
 </div>
 
 <div th:insert="~{blocks/footer :: footer}"></div>
