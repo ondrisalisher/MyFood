@@ -25,13 +25,20 @@
         </label>
         <button type="submit">⌕</button>
         <br>
+        <h3>Pagenation</h3>
         <label>
-            <input name="pageNumber" type="text" placeholder="pageNumber" th:value="${pageNumber}">
+            Page number:
+            <input name="pageNumber" type="text" placeholder="Page number" th:value="${pageNumber}">
         </label>
         <label>
-            <input name="pageSize" type="text" placeholder="pageSize" th:value="${pageSize}">
+            Page size:
+            <input name="pageSize" type="text" placeholder="Page size" th:value="${pageSize}">
+<!--            <select name="pageSize">-->
+<!--                <option value="10">10</option>-->
+<!--                <option value="3">3</option>-->
+<!--            </select>-->
         </label>
-        <button type="submit">⌕</button>
+        <button type="submit">✔</button>
     </form>
     <div th:each="confirmed:${confirmed}" class="alert alert-info mt-2">
         <h3 th:text="${confirmed.getName()}"/>

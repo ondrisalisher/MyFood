@@ -1,12 +1,13 @@
 package org.example.myfood.services;
 
+import org.example.myfood.DTO.AdminDtoUsers;
 import org.example.myfood.DTO.UserDtoChangeRole;
 import org.springframework.ui.Model;
 
 public interface AdminService {
     public String adminPanel();
 
-    public String users(Model model);
+    public String users(Model model, AdminDtoUsers adminDtoUsers);
 
     public String userDetails(Long userId, Model model);
 

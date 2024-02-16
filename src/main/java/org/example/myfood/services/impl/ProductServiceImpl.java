@@ -30,7 +30,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 
 @AllArgsConstructor
 @Service
@@ -285,6 +287,8 @@ public class ProductServiceImpl implements ProductService {
 
         model.addAttribute("pageNumber", pageNumber);
         model.addAttribute("pageSize", pageSize);
+
+//        model.addAttribute("pageSizeChooses", );
 
         return "products";
     }

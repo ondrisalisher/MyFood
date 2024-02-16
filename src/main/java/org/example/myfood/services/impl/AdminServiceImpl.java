@@ -1,6 +1,11 @@
 package org.example.myfood.services.impl;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import lombok.AllArgsConstructor;
+import org.example.myfood.DTO.AdminDtoUsers;
 import org.example.myfood.DTO.UserDtoChangeRole;
 import org.example.myfood.models.ProductModel;
 import org.example.myfood.models.UserModel;
@@ -9,8 +14,13 @@ import org.example.myfood.repositories.FavoriteRepository;
 import org.example.myfood.repositories.ProductRepository;
 import org.example.myfood.repositories.UserRepository;
 import org.example.myfood.services.AdminService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,7 +53,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public String users(Model model) {
+    public String users(Model model, AdminDtoUsers adminDtoUsers) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserModel user = new UserModel();
         if (authentication != null && authentication.isAuthenticated()) {
@@ -54,8 +64,41 @@ public class AdminServiceImpl implements AdminService {
             return "redirect:/user/profile";
         }
 
-        Iterable<UserModel> users = userRepository.findAll();
+        int pageNumber;
+        int pageSize;
+        if(adminDtoUsers.pageNumber() == null && adminDtoUsers.pageSize() == null){
+            pageNumber = 0;
+            pageSize = 3;
+        }else{
+            pageNumber = Integer.parseInt(adminDtoUsers.pageNumber());
+            pageSize = Integer.parseInt(adminDtoUsers.pageSize());
+        }
+
+
+        String searched = "";
+
+        if(!(adminDtoUsers.search() == null)) {
+            searched = adminDtoUsers.search();
+        }
+
+        String finalSearched = searched;
+        Specification<UserModel> search = new Specification<UserModel>() {
+            @Override
+            public Predicate toPredicate(Root<UserModel> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+                return criteriaBuilder.like(criteriaBuilder.lower(root.get("username")), "%" + finalSearched.toLowerCase() + "%");
+            }
+        };
+
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Page<UserModel> users = userRepository.findAll(search, pageable);
+
         model.addAttribute("users", users);
+
+        model.addAttribute("searched", searched);
+
+        model.addAttribute("pageNumber", pageNumber);
+        model.addAttribute("pageSize", pageSize);
 
         return "users";
     }

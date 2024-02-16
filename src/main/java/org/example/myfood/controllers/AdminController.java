@@ -1,6 +1,7 @@
 package org.example.myfood.controllers;
 
 import lombok.AllArgsConstructor;
+import org.example.myfood.DTO.AdminDtoUsers;
 import org.example.myfood.DTO.UserDtoChangeRole;
 import org.example.myfood.services.AdminService;
 import org.springframework.stereotype.Controller;
@@ -19,8 +20,8 @@ public class AdminController {
     }
 
     @GetMapping("/user")
-    public String users(Model model){
-        return adminService.users(model);
+    public String users(Model model, AdminDtoUsers adminDtoUsers){
+        return adminService.users(model, adminDtoUsers);
     }
 
     @GetMapping("/user/{id}")

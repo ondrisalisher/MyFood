@@ -13,6 +13,23 @@
 
 <div class="container mt-5 mb-5">
     <h1 style="text-align: center">Users</h1>
+    <form th:action="@{/admin/user}" method="get">
+        <label>
+            <input name="search" type="text" placeholder="Search..." th:value="${searched}">
+        </label>
+        <button type="submit">⌕</button>
+        <br>
+        <h3>Pagenation</h3>
+        <label>
+            Page number:
+            <input name="pageNumber" type="text" placeholder="Page number" th:value="${pageNumber}">
+        </label>
+        <label>
+            Page size:
+            <input name="pageSize" type="text" placeholder="Page size" th:value="${pageSize}">
+        </label>
+        <button type="submit">✔</button>
+    </form>
     <div th:each="user:${users}" class="alert alert-info mt-2">
         <h1 th:text="${user.getUsername()}"/>
         <p th:text="'Username: ' + ${user.getUsername()}"/>
