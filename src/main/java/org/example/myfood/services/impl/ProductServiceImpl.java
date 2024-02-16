@@ -7,7 +7,8 @@ import jakarta.persistence.criteria.Root;
 import lombok.AllArgsConstructor;
 import org.example.myfood.DTO.EatenDTO;
 import org.example.myfood.DTO.ProductDto;
-import org.example.myfood.DTO.ProductDtoSearch;
+import org.example.myfood.DTO.ProductDtoPage;
+import org.example.myfood.DTO.ProductDtoProducts;
 import org.example.myfood.models.EatenModel;
 import org.example.myfood.models.FavoriteModel;
 import org.example.myfood.models.ProductModel;
@@ -17,6 +18,9 @@ import org.example.myfood.repositories.FavoriteRepository;
 import org.example.myfood.repositories.ProductRepository;
 import org.example.myfood.repositories.UserRepository;
 import org.example.myfood.services.ProductService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,12 +29,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
-import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.Optional;
 
 @AllArgsConstructor
 @Service
@@ -231,7 +231,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public String products(Model model, ProductDtoSearch productDto) {
+    public String products(Model model, ProductDtoProducts productDtoProducts) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserModel user = new UserModel();
         if (authentication != null && authentication.isAuthenticated()) {
@@ -239,43 +239,52 @@ public class ProductServiceImpl implements ProductService {
             user = userRepository.findByUsername(userDetails.getUsername()).get();
         }
 
+
+        int pageNumber;
+        int pageSize;
+        if(productDtoProducts.pageNumber() == null && productDtoProducts.pageSize() == null){
+            pageNumber = 0;
+            pageSize = 3;
+        }else{
+            pageNumber = Integer.parseInt(productDtoProducts.pageNumber());
+            pageSize = Integer.parseInt(productDtoProducts.pageSize());
+        }
+
+
         String searched = "";
 
-        if(!(productDto.search() == null)) {
-            searched = productDto.search();
+        if(!(productDtoProducts.search() == null)) {
+            searched = productDtoProducts.search();
         }
 
         String finalSearched = searched;
         Specification<ProductModel> search = new Specification<ProductModel>() {
             @Override
             public Predicate toPredicate(Root<ProductModel> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-                return criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + finalSearched.toLowerCase() + "%");
+                Predicate namePredicate = criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + finalSearched.toLowerCase() + "%");
+                Predicate statusPredicate = criteriaBuilder.equal(root.get("status"), "confirmed");
+                return criteriaBuilder.and(namePredicate, statusPredicate);
             }
         };
 
-        List<ProductModel> confirmedList = new ArrayList<>();
-        
 
-        Iterable<ProductModel> confirmed = productRepository.findAll(search);
-        for(ProductModel product:confirmed){
-            confirmedList.add(product);
-        }
-
-        confirmedList.removeIf(product -> !product.getStatus().equals("confirmed"));
-
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Page<ProductModel> confirmedPage = productRepository.findAll(search, pageable);
 
         if(user.getRole().equals("ROLE_ADMIN")){
             Iterable<ProductModel> unconfirmed = productRepository.findByStatus("unconfirmed");
             model.addAttribute("unconfirmed", unconfirmed);
-            model.addAttribute("confirmed", confirmedList);
+            model.addAttribute("confirmed", confirmedPage);
         }
         else if(user.getRole().equals("ROLE_USER")){
-            model.addAttribute("confirmed", confirmedList);
+            model.addAttribute("confirmed", confirmedPage);
 
         }
 
-        Iterable<ProductModel> products = productRepository.findAll(search);
-        model.addAttribute("products", products);
+        model.addAttribute("searched", searched);
+
+        model.addAttribute("pageNumber", pageNumber);
+        model.addAttribute("pageSize", pageSize);
 
         return "products";
     }

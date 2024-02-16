@@ -21,7 +21,15 @@
     <h1 style="text-align: center">Products</h1>
     <form th:action="@{/product}" method="get">
         <label>
-            <input name="search" type="text" placeholder="Search...">
+            <input name="search" type="text" placeholder="Search..." th:value="${searched}">
+        </label>
+        <button type="submit">⌕</button>
+        <br>
+        <label>
+            <input name="pageNumber" type="text" placeholder="pageNumber" th:value="${pageNumber}">
+        </label>
+        <label>
+            <input name="pageSize" type="text" placeholder="pageSize" th:value="${pageSize}">
         </label>
         <button type="submit">⌕</button>
     </form>

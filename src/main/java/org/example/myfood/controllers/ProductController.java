@@ -3,7 +3,8 @@ package org.example.myfood.controllers;
 import lombok.AllArgsConstructor;
 import org.example.myfood.DTO.EatenDTO;
 import org.example.myfood.DTO.ProductDto;
-import org.example.myfood.DTO.ProductDtoSearch;
+import org.example.myfood.DTO.ProductDtoPage;
+import org.example.myfood.DTO.ProductDtoProducts;
 import org.example.myfood.services.ProductService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,8 +20,8 @@ public class ProductController {
 
     //todo
     @GetMapping("")
-    public String products(Model model, ProductDtoSearch productDtoSearch){
-        return productService.products(model, productDtoSearch);
+    public String products(Model model, ProductDtoProducts productDtoProducts){
+        return productService.products(model, productDtoProducts);
     }
 
     @GetMapping("/{id}")
