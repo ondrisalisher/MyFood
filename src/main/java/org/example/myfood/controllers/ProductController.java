@@ -18,7 +18,6 @@ public class ProductController {
 
     private ProductService productService;
 
-    //todo
     @GetMapping("")
     public String products(Model model, ProductDtoProducts productDtoProducts){
         return productService.products(model, productDtoProducts);
