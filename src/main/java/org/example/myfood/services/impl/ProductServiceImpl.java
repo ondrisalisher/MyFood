@@ -4,10 +4,8 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
-import lombok.AllArgsConstructor;
 import org.example.myfood.DTO.EatenDTO;
 import org.example.myfood.DTO.ProductDto;
-import org.example.myfood.DTO.ProductDtoPage;
 import org.example.myfood.DTO.ProductDtoProducts;
 import org.example.myfood.models.EatenModel;
 import org.example.myfood.models.FavoriteModel;
@@ -18,31 +16,43 @@ import org.example.myfood.repositories.FavoriteRepository;
 import org.example.myfood.repositories.ProductRepository;
 import org.example.myfood.repositories.UserRepository;
 import org.example.myfood.services.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Map;
 
-@AllArgsConstructor
 @Service
 public class ProductServiceImpl implements ProductService {
 
+    @Autowired
     private ProductRepository productRepository;
+    @Autowired
     private FavoriteRepository favoriteRepository;
+    @Autowired
     private UserRepository userRepository;
+    @Autowired
     private EatenRepository eatenRepository;
+    private RestTemplate restTemplate = new RestTemplate();
 
+    @Value("${warehouse.url}")
+    private String warehouseUrl;
 
     @Override
     public String addProduct(ProductDto productDto) {
@@ -75,7 +85,25 @@ public class ProductServiceImpl implements ProductService {
             product.setConfirmationDate(creation_date);
         }
         productRepository.save(product);
+        if(productDto.status().equals("confirmed")){
+            try {
 
+                var uriBuilder = UriComponentsBuilder.fromHttpUrl(warehouseUrl+"/newProduct")
+                        .queryParam("productName", productDto.name())
+                        .queryParam("quantity", 12)
+                        .queryParam("place", "a"+product.getId())
+                        .queryParam("replacedBy", user.getId());
+                var uriString = uriBuilder.build().toUriString();
+
+                ResponseEntity<String> responseEntity = restTemplate.postForEntity(uriString, null, String.class);
+                System.out.println(responseEntity.getBody());
+            } catch (HttpClientErrorException e) {
+                System.out.println("HTTP Error: " + e.getRawStatusCode() + " - " + e.getStatusText());
+                System.out.println(e);
+            } catch (Exception e){
+                System.out.println(e);
+            }
+        }
         return "redirect:/product";
     }
 
@@ -139,6 +167,24 @@ public class ProductServiceImpl implements ProductService {
         product.setConfirmationDate(confirmationDate);
         productRepository.save(product);
 
+        try {
+
+            var uriBuilder = UriComponentsBuilder.fromHttpUrl(warehouseUrl+"/newProduct")
+                    .queryParam("productName", product.getName())
+                    .queryParam("quantity", 12)
+                    .queryParam("place", "a"+product.getId())
+                    .queryParam("replacedBy", user.getId());
+            var uriString = uriBuilder.build().toUriString();
+
+            ResponseEntity<String> responseEntity = restTemplate.postForEntity(uriString, null, String.class);
+            System.out.println(responseEntity.getBody());
+        } catch (HttpClientErrorException e) {
+            System.out.println("HTTP Error: " + e.getRawStatusCode() + " - " + e.getStatusText());
+            System.out.println(e);
+        } catch (Exception e){
+            System.out.println(e);
+        }
+
         return "redirect:/product";
     }
 
@@ -146,6 +192,22 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public String deleteProduct(Long productId) {
         ProductModel product = productRepository.findById(productId).get();
+
+        try {
+
+            var uriBuilder = UriComponentsBuilder.fromHttpUrl(warehouseUrl+"/deleteProduct")
+                    .queryParam("productName", product.getName());
+            var uriString = uriBuilder.build().toUriString();
+
+            ResponseEntity<String> responseEntity = restTemplate.postForEntity(warehouseUrl + String.format("/deleteProduct?productName=%s", product.getName()), null, String.class);
+            System.out.println(responseEntity.getBody());
+        } catch (HttpClientErrorException e) {
+            System.out.println("HTTP Error: " + e.getRawStatusCode() + " - " + e.getStatusText());
+            System.out.println(e);
+        } catch (Exception e){
+            System.out.println(e);
+        }
+
         favoriteRepository.deleteByProductId(product);
         eatenRepository.deleteByProductId(product);
         productRepository.delete(product);
@@ -212,6 +274,21 @@ public class ProductServiceImpl implements ProductService {
             }
             model.addAttribute("likes", likes);
 
+            try {
+                var uriBuilder = UriComponentsBuilder.fromHttpUrl(warehouseUrl+"/productInfo")
+                        .queryParam("productName", product.getName());
+                var uriString = uriBuilder.build().toUriString();
+
+                ResponseEntity<String> responseEntity = restTemplate.getForEntity(uriString, String.class);
+//                ResponseEntity<String> responseEntity = restTemplate.getForEntity(warehouseUrl + "/productInfo?productName=1", String.class);
+
+                System.out.println(responseEntity.getBody());
+            } catch (HttpClientErrorException e) {
+                System.out.println("HTTP Error: " + e.getRawStatusCode() + " - " + e.getStatusText());
+            } catch (Exception e){
+                System.out.println(e);
+            }
+
             return "productDetailsAdmin";
         }
 
@@ -226,8 +303,23 @@ public class ProductServiceImpl implements ProductService {
             }
             model.addAttribute("likes", likes);
 
+            try {
+                var uriBuilder = UriComponentsBuilder.fromHttpUrl(warehouseUrl+"/productInfo")
+                        .queryParam("productName", product.getName());
+                var uriString = uriBuilder.build().toUriString();
+
+                ResponseEntity<String> responseEntity = restTemplate.getForEntity(uriString, String.class);
+                System.out.println(responseEntity.getBody());
+            } catch (HttpClientErrorException e) {
+                System.out.println("HTTP Error: " + e.getRawStatusCode() + " - " + e.getStatusText());
+            } catch (Exception e){
+                System.out.println(e);
+            }
+
             return "productDetails";
         }
+
+
 
         return null;
     }
@@ -354,6 +446,21 @@ public class ProductServiceImpl implements ProductService {
         eaten.setQuantity(eatenDTO.quantity());
         eaten.setDateTime(eaten_date);
         eaten.setDate(eaten_date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+
+        try {
+            var uriBuilder = UriComponentsBuilder.fromHttpUrl(warehouseUrl+"/takeProduct")
+                    .queryParam("productName", product.getName())
+                    .queryParam("quantity", 1)
+                    .queryParam("place", "a"+product.getId());
+            var uriString = uriBuilder.build().toUriString();
+
+            ResponseEntity<String> responseEntity = restTemplate.postForEntity(uriString, null, String.class);
+            System.out.println(responseEntity.getBody());
+        } catch (HttpClientErrorException e) {
+            System.out.println("HTTP Error: " + e.getRawStatusCode() + " - " + e.getStatusText());
+        } catch (Exception e){
+            System.out.println(e);
+        }
 
         eatenRepository.save(eaten);
 

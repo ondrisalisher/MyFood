@@ -1,0 +1,25 @@
+version: "3.9"
+services:
+  java:
+    build: .
+    ports:
+      - "8081:8081"
+    depends_on:
+      postgres:
+        condition: service_started
+    environment:
+      - DB_HOST=db_postgres
+
+  postgres:
+    image: postgres:16.2-alpine
+    container_name: db_postgres
+    environment:
+      POSTGRES_DB: "myfood_db"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "0102"
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdbdata:/var/lib/postgresql/data
+volumes:
+  pgdbdata: null

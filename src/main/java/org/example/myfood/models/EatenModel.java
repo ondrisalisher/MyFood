@@ -22,7 +22,7 @@ public class EatenModel {
     private UserModel userId;
 
     @ManyToOne
-    @JoinColumn(name = "product")
+    @JoinColumn(name = "product_id")
     private ProductModel productId;
 
     private int quantity;
