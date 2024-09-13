@@ -1,0 +1,36 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5434/myfood_db
+    username: postgres
+    password: 0102
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  sql:
+    init:
+      mode: always
+server:
+  port: 8082
+warehouse:
+  url: http://localhost:8083
+
+
+#spring.datasource.url=jdbc:postgresql://localhost:5434/myfood_db
+#spring.datasource.username=postgres
+#spring.datasource.password=0102
+#spring.datasource.driver-class-name=org.postgresql.Driver
+#spring.jpa.hibernate.ddl-auto=update
+#spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+#spring.sql.init.mode=always
+#
+#
+#server.port=8081
+#
+#warehouse.url=http://localhost:8083
+#
+#
+##spring.kafka.bootstrap-servers=localhost:9092

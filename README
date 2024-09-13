@@ -1,0 +1,3 @@
+jdk 17
+
+To start application write <docker-compose up> in terminal
