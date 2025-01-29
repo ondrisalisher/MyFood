@@ -60,6 +60,7 @@ public class AdminServiceImpl implements AdminService {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             user = userRepository.findByUsername(userDetails.getUsername()).get();
         }
+        final Long currentUserId = user.getId();
         if(!user.getRole().equals("ROLE_ADMIN")){
             return "redirect:/user/profile";
         }
@@ -85,7 +86,11 @@ public class AdminServiceImpl implements AdminService {
         Specification<UserModel> search = new Specification<UserModel>() {
             @Override
             public Predicate toPredicate(Root<UserModel> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-                return criteriaBuilder.like(criteriaBuilder.lower(root.get("username")), "%" + finalSearched.toLowerCase() + "%");
+                Predicate usernamePredicate = criteriaBuilder.like(
+                        criteriaBuilder.lower(root.get("username")), "%" + finalSearched.toLowerCase() + "%"
+                );
+                Predicate excludeCurrentUserPredicate = criteriaBuilder.notEqual(root.get("id"), currentUserId);
+                return criteriaBuilder.and(usernamePredicate, excludeCurrentUserPredicate);
             }
         };
 
